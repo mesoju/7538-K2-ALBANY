@@ -18,7 +18,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 
 
-public class TurretShooterSubsystemV2 extends SubsystemBase {
+public class TurretShooterSubsystem extends SubsystemBase {
     
   TalonFX shooterMotor = new TalonFX(MotorConstants.TURRET_SHOOTER_MOTOR_ID);
   MotorOutputConfigs coastMode = new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Coast);
@@ -34,7 +34,7 @@ public class TurretShooterSubsystemV2 extends SubsystemBase {
     );
 
   /** Creates a new ExampleSubsystem. */
-  public TurretShooterSubsystemV2() {
+  public TurretShooterSubsystem() {
     shooterMotor.getConfigurator().apply(coastMode);
     
   }

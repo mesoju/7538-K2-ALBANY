@@ -51,7 +51,7 @@ import frc.robot.subsystems.IntakeSubsystems.IntakeDeploySubsystem;
 import frc.robot.subsystems.IntakeSubsystems.IntakeSubsystem;
 import frc.robot.subsystems.TurretSubsystems.TurretHoodSubsystem;
 import frc.robot.subsystems.TurretSubsystems.TurretRotationSubsystem;
-import frc.robot.subsystems.TurretSubsystems.TurretShooterSubsystemV2;
+import frc.robot.subsystems.TurretSubsystems.TurretShooterSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 // import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Vision.Vision;
@@ -63,10 +63,10 @@ import frc.robot.commands.IntakeCommands.IntakeDeployCommand;
 import frc.robot.commands.IntakeCommands.IntakeCommand;
 import frc.robot.commands.TurretCommands.TurretHoodCommands;
 import frc.robot.commands.TurretCommands.TurretRotationCommands;
-import frc.robot.commands.TurretCommands.TurretShooterCommandsV2;
+import frc.robot.commands.TurretCommands.TurretShooterCommands;
 
 public class RobotContainer {
-    private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     /* Setting up bindings for necessary control of the swerve drive platform */
@@ -96,7 +96,7 @@ public class RobotContainer {
 
     private final FeederSubsystem feederSubsystem = new FeederSubsystem();
 
-    private final TurretShooterSubsystemV2 turretShooterSubsystemV2 = new TurretShooterSubsystemV2();
+    private final TurretShooterSubsystem turretShooterSubsystemV2 = new TurretShooterSubsystem();
     private final TurretHoodSubsystem turretHoodSubsystem = new TurretHoodSubsystem();
     private final TurretRotationSubsystem turretRotationSubsystem = new TurretRotationSubsystem();
 
@@ -128,7 +128,7 @@ public class RobotContainer {
         driverController::getLeftTriggerAxis, 
         driverController::getRightTriggerAxis));
 
-        turretShooterSubsystemV2.setDefaultCommand(new TurretShooterCommandsV2(turretShooterSubsystemV2, 
+        turretShooterSubsystemV2.setDefaultCommand(new TurretShooterCommands(turretShooterSubsystemV2, 
         driverController::getLeftTriggerAxis,
         driverController::getRightTriggerAxis
         ));
@@ -143,16 +143,10 @@ public class RobotContainer {
         driverController::getPOV,
         driverController::getBButton));
 
-            configureBindings();
-
-            
-        turretShooterSubsystemV2.setDefaultCommand(new TurretShooterCommandsV2(turretShooterSubsystemV2, 
-        driverController::getLeftTriggerAxis,
-        driverController::getRightTriggerAxis
-        ));
+        configureBindings();
     }
 
-    private void configureBindings() {
+   private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
@@ -207,18 +201,4 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle)
         );
     }
-
-    public void setAlliance(Optional<Alliance> alliance) {
-        this.alliance = alliance;
-        setAllianceColor();
-    }
-
-    public void setAllianceColor() {
-        if (this.alliance.isPresent()) {
-            this.color = this.alliance.get();
-        } else {
-            this.color = Alliance.Blue;
-        }
-    }
 }
-

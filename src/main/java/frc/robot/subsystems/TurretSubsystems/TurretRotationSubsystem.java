@@ -5,17 +5,15 @@
 package frc.robot.subsystems.TurretSubsystems;
 
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.MotorConstants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.EncoderConstants;
+
+import org.opencv.core.Mat;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -40,6 +38,8 @@ public class TurretRotationSubsystem extends SubsystemBase {
   private Double turretRotationUpperBound = null;
 
   private boolean isTurretBusy = true;
+  private boolean isTurretHoming = true;
+  private Double homeDeadband = null;
 
   /** Creates a new TurretRotationSubsystem. */
   public TurretRotationSubsystem() {
@@ -68,7 +68,6 @@ public class TurretRotationSubsystem extends SubsystemBase {
     var motionMagicConfigs = talonFXConfigs.MotionMagic;
     motionMagicConfigs.MotionMagicCruiseVelocity = TurretConstants.CRUISEVELOCITY;
     motionMagicConfigs.MotionMagicAcceleration = TurretConstants.ACCELERATION;
-    //motionMagicConfigs.MotionMagicJerk = TurretConstants.JERK;
 
     turretRotationMotor.getConfigurator().apply(talonFXConfigs);
     turretRotationMotor.getConfigurator().apply(motionMagicConfigs);
@@ -78,12 +77,10 @@ public class TurretRotationSubsystem extends SubsystemBase {
 
   public void forceRotationMotorSpeed(double speed) {
     turretRotationMotor.set(speed);
-    
-    //System.out.println(turretRotationCANCoder.getPosition());
   }
 
   public void setRotationMotorSpeed(double speed) {
-    if (!isTurretBusy) {
+    if (!isTurretHoming) {
       if (turretRotationLowerBound != null && turretRotationUpperBound != null) {
           if ((turretRotationCANCoder.getPosition().getValueAsDouble() < turretRotationUpperBound && (turretRotationCANCoder.getPosition().getValueAsDouble() > turretRotationLowerBound))) {
             turretRotationMotor.set(speed);
@@ -98,7 +95,7 @@ public class TurretRotationSubsystem extends SubsystemBase {
 
   public void setTurretAngle(double degrees) {
     degrees = -degrees;
-    if (!isTurretBusy) {
+    if (!isTurretHoming) {
       final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
       double rotation = Units.degreesToRotations(degrees);
       // set target position to # rotations
@@ -108,39 +105,55 @@ public class TurretRotationSubsystem extends SubsystemBase {
 
   public void zeroEncoderFromInit() {
     isTurretBusy = true;
+    isTurretHoming = true;
+    homeDeadband = null;
+    boolean[] limitSwitches = {true, true};
 
     // Case 1: Both limit switches are hit at the same times -> Successful homing
     // Case 2: Limit switch 0 is detected -> Rehome in other direction until both limit switches are hit simultaneously
     // Case 3: Limit switch 1 is detected -> Rehome in other direction until both limit switches are hit simultaneously
+    // * Add an encoder deadband of approximately 5 deg
 
     forceRotationMotorSpeed(0.5); // Initially go CCW until a limit switch is hit.
     while (isTurretBusy) {
       
-      if (!ls_0.get() && !ls_1.get()) { // Case 1
-        forceRotationMotorSpeed(0);
-        isTurretBusy = false;
-      } else if (!ls_0.get() || !ls_1.get()) { // Case 2 & 3
-        forceRotationMotorSpeed(-0.15);
-      }
+        if (!ls_0.get() && !ls_1.get()) { // Case 1 (simultaneously pressed with no deadband)
+          isTurretBusy = false;
+          forceRotationMotorSpeed(0);
+          homeDeadband = null;
+        } else if ((!ls_0.get() || !ls_1.get()) && homeDeadband == null) { // Case 2 & 3, then apply deadband
+          homeDeadband = turretRotationCANCoder.getPosition().getValueAsDouble();
+          limitSwitches[0] = ls_0.get();
+          limitSwitches[1] = ls_1.get();
+        } else if (homeDeadband != null && (Units.rotationsToDegrees( Math.abs(turretRotationCANCoder.getPosition().getValueAsDouble() - homeDeadband) ) > 5.0 ) ) {
+          limitSwitches[0] = true;
+          limitSwitches[1] = true;
+          homeDeadband = null;
+          forceRotationMotorSpeed(-0.2);
+        } else if (homeDeadband != null && (Units.rotationsToDegrees( Math.abs(turretRotationCANCoder.getPosition().getValueAsDouble() - homeDeadband)) <= 5.0 ) && (!ls_0.get() || !ls_0.get())) {
+          limitSwitches[0] = ls_0.get();
+          limitSwitches[1] = ls_1.get();
+
+          if (!limitSwitches[0] && !limitSwitches[1]) { // Both limit switches are hit within the allocated deadband
+            isTurretBusy = false;
+            forceRotationMotorSpeed(0);
+            homeDeadband = null;
+          }
+        }
 
     }
-
-    // while (isTurretBusy) {
-    //   if (!ls_0.get()) {
-    //     isTurretBusy = false;
-    //     forceRotationMotorSpeed(0);
-    //   }
-    // }
 
     new Thread(() -> {
     try {
 
       Thread.sleep(200);
       turretRotationCANCoder.setPosition(0);
+      isTurretHoming = false;
 
     } catch (InterruptedException e) {
         turretRotationCANCoder.setPosition(0);
         e.printStackTrace();
+        isTurretHoming = false;
         
     }
     }).start();

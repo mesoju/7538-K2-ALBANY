@@ -43,20 +43,6 @@ public class TurretRotationCommands extends Command {
   @Override
   public void execute(){
 
-    double rightAzimuthDouble = rightAzimuth.getAsDouble();
-
-    if (zeroButton.getAsBoolean()) {
-      //m_subsystem.zeroEncoder();
-    }
-
-    if (rightAzimuthDouble == 90) {
-      //m_subsystem.setRotationMotorSpeed(-0.2); // CW
-    } else if (rightAzimuthDouble == 270) {
-      //m_subsystem.setRotationMotorSpeed(0.2); //CCW
-    } else {
-      m_subsystem.setRotationMotorSpeed(0);
-    }
-
     if (!intervene) {
 
       Double angle = poseUtility.getBestFieldGoalAngle();

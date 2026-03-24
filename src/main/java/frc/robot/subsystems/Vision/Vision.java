@@ -18,6 +18,7 @@ import frc.robot.Constants;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class Vision extends SubsystemBase {
@@ -62,57 +63,36 @@ public class Vision extends SubsystemBase {
       double heading = drivetrain.getState().Pose.getRotation().getDegrees();
       //double heading = 0;
 
-      LimelightHelpers.SetIMUMode(leftCamName, 2);
-      LimelightHelpers.SetIMUMode(RightCamName, 2);
+      LimelightHelpers.SetIMUMode(leftCamName, 4);
+      LimelightHelpers.SetIMUMode(RightCamName, 4);
+
+      LimelightHelpers.SetRobotOrientation(leftCamName, heading, 0, 0, 0, 0, 0);          
+      LimelightHelpers.SetRobotOrientation(RightCamName, heading, 0, 0, 0, 0, 0);
     
       LimelightHelpers.PoseEstimate leftEstimate =
         LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-left");
 
       LimelightHelpers.PoseEstimate rightEstimate =
         LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-right");
-
-      boolean testTurretFromLocalization = false;
-      boolean useLeft = false;
       
       if (leftEstimate.tagCount > 0) {
-        // System.out.println("Left Limelight pose: " + leftEstimate.pose);
-        // System.out.println("Left " + leftEstimate);
-        LimelightHelpers.SetRobotOrientation(leftCamName, heading, 0, 0, 0, 0, 0);
-        LimelightHelpers.setCameraPose_RobotSpace(leftCamName, heading, 0, 0, 0, 0, 0);
-          
-
-        drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 99999));
+        drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.15, 0.15, 99999));
         drivetrain.addVisionMeasurement(
           leftEstimate.pose,
           leftEstimate.timestampSeconds
         );
-
-        //useLeft = true;
-        //testTurretFromLocalization = true;
       } else if (rightEstimate.tagCount > 0) {
-        // System.out.println("Right Limelight pose: " + rightEstimate.pose);
-        // System.out.println("Right " + rightEstimate);
-        LimelightHelpers.SetRobotOrientation(RightCamName, heading, 0, 0, 0, 0, 0);
-        LimelightHelpers.setCameraPose_RobotSpace(RightCamName, heading, 0, 0, 0, 0, 0);
-
-
-        drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 99999));
+        drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.15, 0.15, 99999));
         drivetrain.addVisionMeasurement(
           rightEstimate.pose,
           rightEstimate.timestampSeconds
         );
-
-        //testTurretFromLocalization = true;
       }
-
-      //if (testTurretFromLocalization) {
-        //this.poseUtility.updatePose2D(useLeft ? leftEstimate.pose : rightEstimate.pose);
-
         this.poseUtility.updatePose2D(drivetrain.getState().Pose);
 
-        double angle = this.poseUtility.getAngleToPositionTurret(this.color == Alliance.Blue ? Constants.FieldQuadrants.BlueAllyHub : Constants.FieldQuadrants.RedAllyHub);
-        System.out.println("Turret Angle needed: "+angle);
-      //}
+        //double angle = this.poseUtility.getAngleToPositionTurret(this.color == Alliance.Blue ? Constants.FieldQuadrants.BlueAllyHub : Constants.FieldQuadrants.RedAllyHub);
+        double angle = this.poseUtility.getBestFieldGoalAngle();
+        SmartDashboard.putNumber("DesiredTurretAngle", -angle);
     }
   }
 

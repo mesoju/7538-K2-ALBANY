@@ -88,6 +88,8 @@ public class pose2Dutility {
         //double[] coordinates = new double[2];
         Double angle = null;
 
+        this.color = DriverStation.getAlliance().get();
+
         if (color != Alliance.Red) { // Our Alliance is Blue
             if (turretPose2d.getX() > Constants.FieldQuadrants.BlueAllyHub[0]) { // Past the hub, intent: shoot into alliance corners
                 if (turretPose2d.getY() > Constants.FieldQuadrants.BlueAllyHub[1]) { // Left of hub, in the middle of the field

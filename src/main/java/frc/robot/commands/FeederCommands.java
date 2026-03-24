@@ -40,7 +40,7 @@ public class FeederCommands extends Command {
 
     if(Math.abs(leftTrigger.getAsDouble() - rightTrigger.getAsDouble()) > 0.1) {
 
-      m_subsystem.feedSpeed((leftTrigger.getAsDouble() - rightTrigger.getAsDouble()) * 0.5);
+      m_subsystem.feedSpeed((rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) * 0.5);
 
     } else {
 

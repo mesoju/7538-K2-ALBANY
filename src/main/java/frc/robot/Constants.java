@@ -79,15 +79,15 @@ public final class Constants {
 
   public final class TurretConstants {
     public static final double kG = 0.0; // Output needed to overcome gravity
-    public static final double kS = 0.5; // Add 0.25 V output to overcome static friction
-    public static final double kV = 3; // A velocity target of 1 rps results in 0.12 V output
-    public static final double kA = 0.05; // An acceleration of 1 rps/s require 0.01 v output
-    public static final double kP = 1; // An error of 1 rotation results in 2.4 V output
-    public static final double kI = 0.5; // no output for integrated error
+    public static final double kS = 0.25; // Add 0.25 V output to overcome static friction
+    public static final double kV = 8; // A velocity target of 1 rps results in 0.12 V output
+    public static final double kA = 0.15; // An acceleration of 1 rps/s require 0.01 v output
+    public static final double kP = 6.4; // An error of 1 rotation results in 2.4 V output
+    public static final double kI = 3.0; // no output for integrated error
     public static final double kD = 0.0; // A velocity of 1 rps results in 0.1 V output
 
-    public static final double CRUISEVELOCITY = 30;
-    public static final double ACCELERATION = 30;
+    public static final double CRUISEVELOCITY = 80;
+    public static final double ACCELERATION = 50;
     public static final double JERK = 0;
 
     public static final double SensorToMechanismRatio = 4.875;

@@ -9,13 +9,13 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.subsystems.TurretSubsystems.TurretShooterSubsystemV2;
+import frc.robot.subsystems.TurretSubsystems.TurretShooterSubsystem;
 
 /** An example command that uses an example subsystem. */
-public class TurretShooterCommandsV2 extends Command {
+public class TurretShooterCommands extends Command {
   @SuppressWarnings("PMD.UnusedPrivateField")
 
-  private final TurretShooterSubsystemV2 m_subsystem;
+  private final TurretShooterSubsystem m_subsystem;
   
   private DoubleSupplier leftTrigger;
   private DoubleSupplier rightTrigger;
@@ -25,7 +25,7 @@ public class TurretShooterCommandsV2 extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public TurretShooterCommandsV2(TurretShooterSubsystemV2 subsystem, DoubleSupplier leftTrigger, DoubleSupplier rightTrigger) {
+  public TurretShooterCommands(TurretShooterSubsystem subsystem, DoubleSupplier leftTrigger, DoubleSupplier rightTrigger) {
     this.leftTrigger = leftTrigger;
     this.rightTrigger = rightTrigger;
 
