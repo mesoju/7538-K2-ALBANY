@@ -10,12 +10,14 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.TurretSubsystems.TurretShooterSubsystem;
+import frc.robot.utility.pose2Dutility;
 
 /** An example command that uses an example subsystem. */
 public class TurretShooterCommands extends Command {
   @SuppressWarnings("PMD.UnusedPrivateField")
 
   private final TurretShooterSubsystem m_subsystem;
+  private final pose2Dutility m_poseUtility;
   
   private DoubleSupplier leftTrigger;
   private DoubleSupplier rightTrigger;
@@ -25,7 +27,8 @@ public class TurretShooterCommands extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public TurretShooterCommands(TurretShooterSubsystem subsystem, DoubleSupplier leftTrigger, DoubleSupplier rightTrigger) {
+  public TurretShooterCommands(TurretShooterSubsystem subsystem, pose2Dutility m_poseUtility, DoubleSupplier leftTrigger, DoubleSupplier rightTrigger) {
+    this.m_poseUtility = m_poseUtility;
     this.leftTrigger = leftTrigger;
     this.rightTrigger = rightTrigger;
 
@@ -37,14 +40,13 @@ public class TurretShooterCommands extends Command {
   
   @Override
   public void execute(){
-    if (rightTrigger.getAsDouble() >= 0.1) {
-      double setpoint = Math.max
-        (0, 
-        (rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) 
-            * Units.rotationsPerMinuteToRadiansPerSecond(ShooterConstants.kMaxSetpointValue));
-      m_subsystem.shooterspeed(setpoint);
+    if (rightTrigger.getAsDouble() >= 0.1 && leftTrigger.getAsDouble() <= 0.1) {
+      double setpoint = m_poseUtility.getBestVelocitySetpoint();
+      m_subsystem.setShooterSetpoint(setpoint);
+    } else if (leftTrigger.getAsDouble() >= 0.1) {
+      m_subsystem.setShooterSetpoint(-70);
     } else {
-      m_subsystem.shooterspeed(0);
+      m_subsystem.setShooterSetpoint(0);
     }
   }
 

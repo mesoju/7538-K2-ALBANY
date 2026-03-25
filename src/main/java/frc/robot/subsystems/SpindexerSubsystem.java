@@ -17,9 +17,8 @@ public class SpindexerSubsystem extends SubsystemBase {
   TalonFX spindexerMotor = new TalonFX(MotorConstants.SPINDEXER_MOTOR_ID);
   
   /** Creates a new ExampleSubsystem. */
+  
   public SpindexerSubsystem() {}
-
-
 
   public void feedSpeed(double speed){
     spindexerMotor.set(speed);

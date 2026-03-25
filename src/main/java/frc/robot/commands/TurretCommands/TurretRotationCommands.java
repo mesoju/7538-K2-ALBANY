@@ -17,8 +17,6 @@ public class TurretRotationCommands extends Command {
   @SuppressWarnings("PMD.UnusedPrivateField")
 
   private final TurretRotationSubsystem m_subsystem;
-  private BooleanSupplier zeroButton;
-  private DoubleSupplier rightAzimuth;
   private boolean intervene; 
   private pose2Dutility poseUtility;
 
@@ -29,10 +27,7 @@ public class TurretRotationCommands extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public TurretRotationCommands(TurretRotationSubsystem subsystem, pose2Dutility poseUtility, DoubleSupplier RightAzimuth, BooleanSupplier zeroButton) {
-    this.zeroButton = zeroButton;
-    this.rightAzimuth = RightAzimuth;
-
+  public TurretRotationCommands(TurretRotationSubsystem subsystem, pose2Dutility poseUtility) {
     this.poseUtility = poseUtility;
 
     m_subsystem = subsystem;
@@ -46,7 +41,7 @@ public class TurretRotationCommands extends Command {
   public void execute(){
 
     if (!intervene && System.currentTimeMillis() >= lastUpdate) {
-      lastUpdate = System.currentTimeMillis() + 500;
+      lastUpdate = System.currentTimeMillis() + 250;
       Double angle = poseUtility.getBestFieldGoalAngle();
 
       m_subsystem.setTurretAngle(angle);

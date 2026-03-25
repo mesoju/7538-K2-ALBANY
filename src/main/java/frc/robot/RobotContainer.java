@@ -88,7 +88,7 @@ private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecon
 
     private final FeederSubsystem feederSubsystem = new FeederSubsystem();
 
-    private final TurretShooterSubsystem turretShooterSubsystemV2 = new TurretShooterSubsystem();
+    private final TurretShooterSubsystem turretShooterSubsystem = new TurretShooterSubsystem();
     private final TurretRotationSubsystem turretRotationSubsystem = new TurretRotationSubsystem();
 
     // Field Data
@@ -103,31 +103,40 @@ private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecon
 
     public RobotContainer() {
           
-        feederSubsystem.setDefaultCommand(new FeederCommands(feederSubsystem, 
-        driverController::getLeftTriggerAxis, 
-        driverController::getRightTriggerAxis));
-
-        intakeDeploySubsystem.setDefaultCommand(new IntakeDeployCommand(intakeDeploySubsystem,
-        driverController::getLeftBumperButton, 
-        driverController::getRightBumperButton,
-        driverController::getXButton));
-
-        intakeSubsystem.setDefaultCommand(new IntakeCommand(intakeSubsystem, 
-        driverController::getYButton)); // CHANGE THIS TO SOMETHING ELSE
-
-        spindexerSubsystem.setDefaultCommand(new SpindexerCommands(spindexerSubsystem, 
-        driverController::getLeftTriggerAxis, 
-        driverController::getRightTriggerAxis));
-
-        turretShooterSubsystemV2.setDefaultCommand(new TurretShooterCommands(turretShooterSubsystemV2, 
-        driverController::getLeftTriggerAxis,
-        driverController::getRightTriggerAxis
+        feederSubsystem.setDefaultCommand(new FeederCommands(
+            feederSubsystem, 
+            driverController::getLeftTriggerAxis, 
+            driverController::getRightTriggerAxis
         ));
 
-        turretRotationSubsystem.setDefaultCommand(new TurretRotationCommands(turretRotationSubsystem, 
-        poseUtility,
-        driverController::getPOV,
-        driverController::getBButton));
+        intakeDeploySubsystem.setDefaultCommand(new IntakeDeployCommand(
+            intakeDeploySubsystem,
+            driverController::getLeftBumperButton, 
+            driverController::getRightBumperButton,
+            driverController::getXButton
+        ));
+
+        intakeSubsystem.setDefaultCommand(new IntakeCommand(
+            intakeSubsystem, 
+            driverController::getYButton
+        )); // CHANGE THIS TO SOMETHING ELSE
+
+        spindexerSubsystem.setDefaultCommand(new SpindexerCommands(
+            spindexerSubsystem, 
+            driverController::getLeftTriggerAxis, 
+            driverController::getRightTriggerAxis
+        ));
+
+        turretShooterSubsystem.setDefaultCommand(new TurretShooterCommands(turretShooterSubsystem,
+            poseUtility,
+            driverController::getLeftTriggerAxis,
+            driverController::getRightTriggerAxis
+        ));
+
+        turretRotationSubsystem.setDefaultCommand(new TurretRotationCommands(
+            turretRotationSubsystem, 
+            poseUtility
+        ));
 
         configureBindings();
     }

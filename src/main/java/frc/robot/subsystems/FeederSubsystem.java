@@ -13,10 +13,12 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 
 public class FeederSubsystem extends SubsystemBase {
+
   TalonFX feederMotor = new TalonFX(MotorConstants.FEEDER_MOTOR_ID);
-  /** Creates a new ExampleSubsystem. */public FeederSubsystem() {}
 
-
+  /** Creates a new ExampleSubsystem. */
+  
+  public FeederSubsystem() {}
 
   public void feedSpeed(double speed){
     feederMotor.set(speed);

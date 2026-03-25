@@ -19,8 +19,6 @@ public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public IntakeSubsystem() {}
 
-
-
   public void intakeSpeed(double speed){
     intakeMotor.set(speed);
   }

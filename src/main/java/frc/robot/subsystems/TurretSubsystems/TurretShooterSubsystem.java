@@ -61,7 +61,7 @@ public class TurretShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {}
 
-  public void shooterspeed(double setpoint) {
+  public void setShooterSetpoint(double setpoint) {
     //double EncoderVelocity = shooterMotor.getVelocity().getValueAsDouble() > 1 ? shooterMotor.getVelocity().getValueAsDouble() : 0;
 
     MotionMagicVelocityVoltage m_request = new MotionMagicVelocityVoltage(setpoint);

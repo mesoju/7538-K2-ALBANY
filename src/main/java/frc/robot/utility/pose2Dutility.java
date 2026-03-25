@@ -86,16 +86,6 @@ public class pose2Dutility {
     }
 
     public Double getAngleToPositionTurret(Double[] position) {
-        // double angle = 0;
-
-        // double robotAngle = turretPose2d.getRotation().getDegrees();
-        // double[] hubOffsetRelativeToRobot = {turretPose2d.getX() - position[0], turretPose2d.getY() - position[1]};
-
-        // double atanAngle = Math.atan2(hubOffsetRelativeToRobot[1], hubOffsetRelativeToRobot[0]);
-        
-        // angle = Math.toDegrees(atanAngle) - robotAngle;
-
-        // return angle;
 
         if (position[0] != null && position[1] != null) {
 
@@ -192,55 +182,6 @@ public class pose2Dutility {
 
         return position;
     }
-
-    // private Double getShooterAngleFromHoodAngle(double HoodAngle) {
-    //     Double shooterAngle = null;
-
-    //     shooterAngle = 90 - HoodAngle;
-
-    //     return shooterAngle;
-    // }
-
-    // private Double getHoodAngleFromShooterAngle(double ShooterAngle) {
-    //     Double hoodAngle = null;
-
-    //     hoodAngle = 90 - ShooterAngle;
-
-    //     return hoodAngle;
-    // }
-
-    // private Double getShooterAngleToPositionTurret(int arc, double distance, double velocity, double heightDisplacement) { // Returns degrees
-    //     Double shooterAngle = null;
-    //     double gravity = 9.81;
-
-    //     if (arc == 0) { // Low arc
-    //         shooterAngle = Math.atan(
-    //             (velocity*velocity) + Math.sqrt(Math.pow(velocity, 4.0) - gravity * (gravity * (distance * distance) + 2 * heightDisplacement * (velocity * velocity)))
-    //             / (gravity * distance)
-    //         );
-    //     } else { // High arc
-    //         shooterAngle = Math.atan(
-    //             (velocity*velocity) - Math.sqrt(Math.pow(velocity, 4.0) - gravity * (gravity * (distance * distance) + 2 * heightDisplacement * (velocity * velocity)))
-    //             / (gravity * distance)
-    //         );
-    //     }
-
-    //     shooterAngle = Units.radiansToDegrees(shooterAngle);
-
-    //     return shooterAngle;
-    // }
-
-    // public Double getHoodAngleToPositionTurret(Double[] position) {
-    //     Double hoodAngle = null;
-
-    //     double distance = getMagnitudeToPositionTurret(position);
-    //     Double shooterAngle = getShooterAngleToPositionTurret(1, distance, 60, position[2] - TurretConstants.turretOffsets[1]);
-
-    //     hoodAngle = getHoodAngleFromShooterAngle(shooterAngle);
-
-    //     return hoodAngle;
-
-    // }
 
     public void setTagDetected(boolean areTagsDetected) {
         this.areTagsDetected = areTagsDetected;
