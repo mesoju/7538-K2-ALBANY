@@ -179,6 +179,11 @@ public class RobotContainer {
             intakeSubsystem.setIndexer(-MotorConstants.INDEXER_SPEED);
         }));
 
+        // Apply new MotionMagic Values:
+        DriverController.back().onTrue(Commands.runOnce(() -> {
+            turretShooterSubsystem.configureMotors();
+        }));
+
         // Reset the field-centric heading on left bumper press.
         DriverController.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 

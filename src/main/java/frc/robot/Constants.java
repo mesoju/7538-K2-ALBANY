@@ -111,7 +111,7 @@ public final class Constants {
 
     public static final double CRUISEVELOCITY = 8;
     public static final double ACCELERATION = 5;
-    public static final double JERK = 0;
+    public static final double JERK = 4000;
 
     public static final double SensorToMechanismRatio = 4.875;
     public static final double RotorToSensorRatio = 45.5;
