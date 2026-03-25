@@ -38,6 +38,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -45,24 +46,26 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 // Subsystems
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.SpindexerSubsystem;
-import frc.robot.subsystems.IntakeSubsystems.IntakeDeploySubsystem;
-import frc.robot.subsystems.IntakeSubsystems.IntakeSubsystem;
+import frc.robot.subsystems.IntakeSubsystems.Intake;
 import frc.robot.subsystems.TurretSubsystems.TurretRotationSubsystem;
 import frc.robot.subsystems.TurretSubsystems.TurretShooterSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 // import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.Vision.Vision;
 import frc.robot.utility.pose2Dutility;
+import frc.robot.Constants.MotorConstants;
 //Commands
 import frc.robot.commands.FeederCommands;
 import frc.robot.commands.SpindexerCommands;
-import frc.robot.commands.IntakeCommands.IntakeDeployCommand;
-import frc.robot.commands.IntakeCommands.IntakeCommand;
+import frc.robot.commands.IntakeCommands.Deploy;
+import frc.robot.commands.IntakeCommands.Retract;
 import frc.robot.commands.TurretCommands.TurretRotationCommands;
 import frc.robot.commands.TurretCommands.TurretShooterCommands;
 
 public class RobotContainer {
-private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    public static boolean intakeToggle = false;
+
+    private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     /* Setting up bindings for necessary control of the swerve drive platform */
@@ -81,8 +84,7 @@ private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecon
     // Subsystems
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-    private final IntakeDeploySubsystem intakeDeploySubsystem = new IntakeDeploySubsystem();
-    private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+    private final Intake intakeSubsystem = new Intake();
 
     private final SpindexerSubsystem spindexerSubsystem = new SpindexerSubsystem();
 
@@ -109,17 +111,6 @@ private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecon
             driverController::getRightTriggerAxis
         ));
 
-        intakeDeploySubsystem.setDefaultCommand(new IntakeDeployCommand(
-            intakeDeploySubsystem,
-            driverController::getLeftBumperButton, 
-            driverController::getRightBumperButton,
-            driverController::getXButton
-        ));
-
-        intakeSubsystem.setDefaultCommand(new IntakeCommand(
-            intakeSubsystem, 
-            driverController::getYButton
-        )); // CHANGE THIS TO SOMETHING ELSE
 
         spindexerSubsystem.setDefaultCommand(new SpindexerCommands(
             spindexerSubsystem, 
@@ -171,6 +162,22 @@ private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecon
         DriverController.back().and(DriverController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
         DriverController.start().and(DriverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         DriverController.start().and(DriverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+
+        // DriverController.a().onTrue(new Deploy(intakeSubsystem));
+        // DriverController.b().onTrue(new Retract(intakeSubsystem));
+
+        DriverController.y().onTrue(Commands.parallel(
+            intakeToggle ? new Deploy(intakeSubsystem) : new Retract(intakeSubsystem),
+            Commands.runOnce(() -> {
+                intakeToggle = !intakeToggle;
+            })
+        ));
+        DriverController.leftBumper().onTrue(Commands.run(() -> {
+            intakeSubsystem.setIndexer(MotorConstants.INDEXER_SPEED);
+        }));
+        DriverController.rightBumper().onTrue(Commands.run(() -> {
+            intakeSubsystem.setIndexer(-MotorConstants.INDEXER_SPEED);
+        }));
 
         // Reset the field-centric heading on left bumper press.
         DriverController.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));

@@ -20,9 +20,6 @@ public final class Constants {
   }
 
   public final class MotorConstants {
-    public static final int INTAKE_DEPLOY_LEFT_MOTOR_ID = 14;
-    public static final int INTAKE_DEPLOY_RIGHT_MOTOR_ID = 15;
-    public static final int INTAKE_DRIVE_MOTOR_ID = 16;
 
     public static final int SPINDEXER_MOTOR_ID = 18;
 
@@ -31,6 +28,10 @@ public final class Constants {
     public static final int TURRET_SHOOTER_MOTOR_ID = 20;
     public static final int TURRET_ROTATION_MOTOR_ID = 21;
     public static final int TURRET_HOOD_MOTOR_ID = 22; // REV SparkMax Motor
+    public static final int INTAKE_DEPLOY_ID = -1;
+    public static final int INTAKE_INDEXER_ID = -1;
+
+    public static final double DEPLOY_SPEED = 0;
 
     }
 
@@ -46,6 +47,8 @@ public final class Constants {
     public static final double ONE_ENCODER_ROTATION_TO_TURRET_DEGREES = 83.0769;
     //40 : 195
     // 20 : 1
+
+    public static final int INTAKE_DEPLOY_ENCODER_ID = -1;
 
     }
 
