@@ -47,7 +47,6 @@ public class FeederCommands extends Command {
       m_subsystem.feedSpeed(0);
 
     }
-
   }
 
 }

@@ -79,21 +79,21 @@ public final class Constants {
 
   public final class TurretConstants {
     public static final double kG = 0.0; // Output needed to overcome gravity
-    public static final double kS = 0.25; // Add 0.25 V output to overcome static friction
-    public static final double kV = 8; // A velocity target of 1 rps results in 0.12 V output
-    public static final double kA = 0.15; // An acceleration of 1 rps/s require 0.01 v output
-    public static final double kP = 6.4; // An error of 1 rotation results in 2.4 V output
-    public static final double kI = 3.0; // no output for integrated error
-    public static final double kD = 0.0; // A velocity of 1 rps results in 0.1 V output
+    public static final double kS = 0.4; // Add 0.25 V output to overcome static friction
+    public static final double kV = 4; // A velocity target of 1 rps results in 0.12 V output
+    public static final double kA = 0.2; // An acceleration of 1 rps/s require 0.01 v output
+    public static final double kP = 10.0; // An error of 1 rotation results in 2.4 V output
+    public static final double kI = 0.0; // no output for integrated error
+    public static final double kD = 1.0; // A velocity of 1 rps results in 0.1 V output
 
-    public static final double CRUISEVELOCITY = 80;
-    public static final double ACCELERATION = 50;
+    public static final double CRUISEVELOCITY = 5;
+    public static final double ACCELERATION = 5;
     public static final double JERK = 0;
 
     public static final double SensorToMechanismRatio = 4.875;
     public static final double RotorToSensorRatio = 45.5;
 
-    public static final double[] turretOffsets = {-4.75, 24, -5.25};
+    public static final double[] turretOffsets = {-0.12065, 24, -0.14605}; // {-4.75, 24, -5.25};
   }
 
   public final class HoodConstants {

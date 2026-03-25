@@ -41,15 +41,12 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 // Subsystems
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.SpindexerSubsystem;
 import frc.robot.subsystems.IntakeSubsystems.IntakeDeploySubsystem;
 import frc.robot.subsystems.IntakeSubsystems.IntakeSubsystem;
-import frc.robot.subsystems.TurretSubsystems.TurretHoodSubsystem;
 import frc.robot.subsystems.TurretSubsystems.TurretRotationSubsystem;
 import frc.robot.subsystems.TurretSubsystems.TurretShooterSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -61,7 +58,6 @@ import frc.robot.commands.FeederCommands;
 import frc.robot.commands.SpindexerCommands;
 import frc.robot.commands.IntakeCommands.IntakeDeployCommand;
 import frc.robot.commands.IntakeCommands.IntakeCommand;
-import frc.robot.commands.TurretCommands.TurretHoodCommands;
 import frc.robot.commands.TurretCommands.TurretRotationCommands;
 import frc.robot.commands.TurretCommands.TurretShooterCommands;
 
@@ -78,13 +74,9 @@ private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecon
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
-
-
     // Controllers
     private final XboxController driverController = new XboxController(0);
     private final CommandXboxController DriverController = new CommandXboxController(0);
-
-
 
     // Subsystems
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -97,7 +89,6 @@ private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecon
     private final FeederSubsystem feederSubsystem = new FeederSubsystem();
 
     private final TurretShooterSubsystem turretShooterSubsystemV2 = new TurretShooterSubsystem();
-    private final TurretHoodSubsystem turretHoodSubsystem = new TurretHoodSubsystem();
     private final TurretRotationSubsystem turretRotationSubsystem = new TurretRotationSubsystem();
 
     // Field Data
@@ -107,7 +98,7 @@ private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecon
 
     // public final Vision visionSubsystem = new Vision();
 
-    private final pose2Dutility poseUtility = new pose2Dutility();
+    private final pose2Dutility poseUtility = new pose2Dutility(drivetrain);
     private final Vision vision = new Vision(drivetrain, poseUtility);
 
     public RobotContainer() {
@@ -132,11 +123,6 @@ private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecon
         driverController::getLeftTriggerAxis,
         driverController::getRightTriggerAxis
         ));
-
-        turretHoodSubsystem.setDefaultCommand(new TurretHoodCommands(turretHoodSubsystem, 
-        driverController::getPOV, 
-        driverController::getAButton,
-        driverController::getBButton));
 
         turretRotationSubsystem.setDefaultCommand(new TurretRotationCommands(turretRotationSubsystem, 
         poseUtility,

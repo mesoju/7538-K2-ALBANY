@@ -25,7 +25,6 @@ public class TurretShooterSubsystem extends SubsystemBase {
   BangBangController Kaden = new BangBangController();
   double m_encoder = shooterMotor.getPosition().getValueAsDouble();
   
-
   SimpleMotorFeedforward m_Feedforward = 
     new SimpleMotorFeedforward(
       ShooterConstants.kFlywheelKs, 
@@ -45,7 +44,6 @@ public class TurretShooterSubsystem extends SubsystemBase {
     SmartDashboard.putData(Kaden);
     
   }
-
 
   public void shooterspeed(double setpoint) {
     double EncoderVelocity = shooterMotor.getVelocity().getValueAsDouble() > 1 ? shooterMotor.getVelocity().getValueAsDouble() : 0;

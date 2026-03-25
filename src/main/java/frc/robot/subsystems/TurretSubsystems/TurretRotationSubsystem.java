@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.TurretSubsystems;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -12,8 +13,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorConstants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.Constants.EncoderConstants;
-
-import org.opencv.core.Mat;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -94,10 +93,11 @@ public class TurretRotationSubsystem extends SubsystemBase {
   }
 
   public void setTurretAngle(double degrees) {
-    degrees = -degrees;
-    if (!isTurretHoming) {
-      final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
-      double rotation = Units.degreesToRotations(degrees);
+    // Let's not kill our robot through strangulation :P
+    degrees = MathUtil.clamp(degrees, -180, 180);
+    if (!isTurretHoming) { // Make sure turret is not currently in homing process
+      final MotionMagicVoltage m_request = new MotionMagicVoltage(0); // Create a new voltage request
+      double rotation = Units.degreesToRotations(degrees); // Voltage request based on position from rotations. Encoder reads 1:1 with mechanism.
       // set target position to # rotations
       turretRotationMotor.setControl(m_request.withPosition(rotation));
     }
@@ -145,8 +145,8 @@ public class TurretRotationSubsystem extends SubsystemBase {
 
     new Thread(() -> {
     try {
-
-      Thread.sleep(200);
+      // We should allow the thread to sleep for a second before applying changes to account for overshoot and not apply encoder values from muddy data.
+      Thread.sleep(500);
       turretRotationCANCoder.setPosition(0);
       isTurretHoming = false;
 
@@ -161,7 +161,7 @@ public class TurretRotationSubsystem extends SubsystemBase {
   
   @Override
   public void periodic() {
-    
+    // I love elastic.
     SmartDashboard.putBoolean("TurretLimitSwitch0", ls_0.get());
     SmartDashboard.putBoolean("TurretLimitSwitch1", ls_1.get());
     SmartDashboard.putNumber("EncoderValue", Units.rotationsToDegrees(turretRotationMotor.getPosition().getValueAsDouble()));
