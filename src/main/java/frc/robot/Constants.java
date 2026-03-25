@@ -33,6 +33,8 @@ public final class Constants {
 
     public static final double DEPLOY_SPEED = 0;
 
+    public static final double INDEXER_SPEED = 0;
+
     }
 
 
@@ -49,6 +51,12 @@ public final class Constants {
     // 20 : 1
 
     public static final int INTAKE_DEPLOY_ENCODER_ID = -1;
+
+    public static final int DEPLOY_POS = 0;
+
+    public static final int INTAKE_TOLERANCE = 0;
+
+    public static final int RETRACT_POS = 0;
 
     }
 
