@@ -32,8 +32,6 @@ public class FeederCommands extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
-  
-
 
   @Override
   public void execute(){

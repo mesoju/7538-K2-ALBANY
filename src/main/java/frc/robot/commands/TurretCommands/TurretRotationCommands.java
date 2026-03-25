@@ -22,6 +22,8 @@ public class TurretRotationCommands extends Command {
   private boolean intervene; 
   private pose2Dutility poseUtility;
 
+  private long lastUpdate = 0;
+
   /**
    * Creates a new ExampleCommand.
    *
@@ -43,18 +45,14 @@ public class TurretRotationCommands extends Command {
   @Override
   public void execute(){
 
-    if (!intervene) {
-
+    if (!intervene && System.currentTimeMillis() >= lastUpdate) {
+      lastUpdate = System.currentTimeMillis() + 500;
       Double angle = poseUtility.getBestFieldGoalAngle();
 
       m_subsystem.setTurretAngle(angle);
     }
 
   }
-
-
-
-
 
   // Called when the command is initially scheduled.
   @Override

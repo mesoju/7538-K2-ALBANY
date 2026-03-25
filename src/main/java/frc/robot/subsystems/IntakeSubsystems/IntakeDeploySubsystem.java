@@ -35,8 +35,6 @@ public class IntakeDeploySubsystem extends SubsystemBase {
     //   intakeDeployCANCoder.setPosition(0);
     // }
 
-    System.out.println("intake CANCoder " + intakeDeployCANCoder.getPosition());
-
     // move only if encoder is between the high and low ranges
     if (intakeDeployCANCoder.getPosition().getValueAsDouble() > intakeLowestRange && intakeDeployCANCoder.getPosition().getValueAsDouble() < intakeHighestRange) {
 

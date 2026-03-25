@@ -75,6 +75,18 @@ public final class Constants {
     public static final double kFlywheelKa = 100.0; // V/ (RPM/s)
     // Max setpoint for joystick control in RPM
     public static final double kMaxSetpointValue = 1;
+
+    public static final double kG = 0.0; // Output needed to overcome gravity
+    public static final double kS = 0.4; // Add 0.25 V output to overcome static friction
+    public static final double kV = 0.2; // A velocity target of 1 rps results in 0.12 V output
+    public static final double kA = 0.2; // An acceleration of 1 rps/s require 0.01 v output
+    public static final double kP = 6.0; // An error of 1 rotation results in 2.4 V output
+    public static final double kI = 0.0; // no output for integrated error
+    public static final double kD = 0.1; // A velocity of 1 rps results in 0.1 V output
+
+    public static final double CRUISEVELOCITY = 80;
+    public static final double ACCELERATION = 160;
+    public static final double JERK = 0;
   }
 
   public final class TurretConstants {
@@ -82,11 +94,11 @@ public final class Constants {
     public static final double kS = 0.4; // Add 0.25 V output to overcome static friction
     public static final double kV = 4; // A velocity target of 1 rps results in 0.12 V output
     public static final double kA = 0.2; // An acceleration of 1 rps/s require 0.01 v output
-    public static final double kP = 10.0; // An error of 1 rotation results in 2.4 V output
+    public static final double kP = 120.0; // An error of 1 rotation results in 2.4 V output
     public static final double kI = 0.0; // no output for integrated error
     public static final double kD = 1.0; // A velocity of 1 rps results in 0.1 V output
 
-    public static final double CRUISEVELOCITY = 5;
+    public static final double CRUISEVELOCITY = 8;
     public static final double ACCELERATION = 5;
     public static final double JERK = 0;
 
