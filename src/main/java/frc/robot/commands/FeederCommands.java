@@ -39,13 +39,16 @@ public class FeederCommands extends Command {
   @Override
   public void execute(){
 
-  
-    if(Math.abs(leftTrigger.getAsDouble() - rightTrigger.getAsDouble()) >= 0.1 && timeout >= System.currentTimeMillis()) {
+    if(Math.abs(rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) >= 0.1 && timeout == 0) {
       timeout = System.currentTimeMillis() + 2000;
+    } else if(Math.abs(rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) >= 0.1 && System.currentTimeMillis() >= timeout && timeout != 0) {
+
       m_subsystem.feedSpeed((rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) * 0.5);
-    } else if(Math.abs(leftTrigger.getAsDouble() - rightTrigger.getAsDouble()) < 0.1) {
+
+    } else if(Math.abs(rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) < 0.1) {
       timeout = 0;
       m_subsystem.feedSpeed(0);
+
     }
   }
 
