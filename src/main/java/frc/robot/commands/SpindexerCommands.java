@@ -19,6 +19,8 @@ public class SpindexerCommands extends Command {
   private DoubleSupplier leftTrigger;
   private DoubleSupplier rightTrigger;
 
+  private long timeout;
+
   /**
    * Creates a new ExampleCommand.
    *
@@ -27,6 +29,7 @@ public class SpindexerCommands extends Command {
   public SpindexerCommands(SpindexerSubsystem subsystem, DoubleSupplier leftTrigger, DoubleSupplier rightTrigger) {
     this.leftTrigger = leftTrigger;
     this.rightTrigger = rightTrigger;
+    this.timeout = 0;
 
     m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -38,12 +41,13 @@ public class SpindexerCommands extends Command {
   @Override
   public void execute(){
 
-    if(Math.abs(rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) >= 0.1) {
+    if(Math.abs(rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) >= 0.1 && System.currentTimeMillis() >= timeout) {
+      timeout = System.currentTimeMillis() + 2000;
 
       m_subsystem.feedSpeed((rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) * 0.8);
 
-    } else {
-
+    } else if(Math.abs(rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) < 0.1) {
+      timeout = 0;
       m_subsystem.feedSpeed(0);
 
     }

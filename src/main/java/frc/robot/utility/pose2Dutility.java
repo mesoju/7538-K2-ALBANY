@@ -97,7 +97,7 @@ public class pose2Dutility {
             double dx = position[0] - turretPose2d.getY();
             double dy = position[1] - turretPose2d.getX();
 
-            Rotation2d angle = Rotation2d.fromRadians(Math.atan2(dx, dy) - Math.toRadians(-75)); // #1
+            Rotation2d angle = Rotation2d.fromRadians(Math.atan2(dy, -dx) * Math.toRadians(90)); // #1
             Rotation2d relative = angle.minus(turretPose2d.getRotation());
 
             return relative.getDegrees();

@@ -124,7 +124,13 @@ public class RobotContainer {
     }
 
     private void setCommandControl() {
-        if (!phillip_died_order_67) {
+        // if (!phillip_died_order_67) {
+            turretShooterSubsystem.setDefaultCommand(new TurretShooterCommands(turretShooterSubsystem,
+                poseUtility,
+                driverController::getLeftTriggerAxis,
+                driverController::getRightTriggerAxis
+            ));
+
             feederSubsystem.setDefaultCommand(new FeederCommands(
                 feederSubsystem, 
                 driverController::getLeftTriggerAxis, 
@@ -137,22 +143,16 @@ public class RobotContainer {
                 driverController::getRightTriggerAxis
             ));
 
-            turretShooterSubsystem.setDefaultCommand(new TurretShooterCommands(turretShooterSubsystem,
-                poseUtility,
-                driverController::getLeftTriggerAxis,
-                driverController::getRightTriggerAxis
-            ));
-
             turretRotationSubsystem.setDefaultCommand(new TurretRotationCommands(
                 turretRotationSubsystem, 
                 poseUtility
             ));
-        } else { // Phillip died... RIP
-            turretRotationSubsystem.setDefaultCommand(new ManualTurretRotation(
-                turretRotationSubsystem,
-                secondaryController::getLeftX
-            ));
-        }
+        // } else { // Phillip died... RIP
+        //     turretRotationSubsystem.setDefaultCommand(new ManualTurretRotation(
+        //         turretRotationSubsystem,
+        //         secondaryController::getLeftX
+        //     ));
+        // }
     }
 
     private void configureBindings() {
@@ -212,12 +212,12 @@ public class RobotContainer {
             drivetrain.runOnce(drivetrain::seedFieldCentric)
         );
 
-        DriverController.a().onTrue(Commands.runOnce(() -> {
-            phillip_died_order_67 = !phillip_died_order_67;
-            System.out.println(phillip_died_order_67);
+        // DriverController.a().onTrue(Commands.runOnce(() -> {
+        //     phillip_died_order_67 = !phillip_died_order_67;
+        //     System.out.println(phillip_died_order_67);
 
-            setCommandControl();
-        }));
+        //     setCommandControl();
+        // }));
 
         // Reset the field-centric heading on left bumper press.
         // DriverController.start().onTrue(

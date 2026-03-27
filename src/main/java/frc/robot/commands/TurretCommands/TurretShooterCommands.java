@@ -40,14 +40,14 @@ public class TurretShooterCommands extends Command {
   @Override
   public void execute(){
     if (rightTrigger.getAsDouble() >= 0.1 && leftTrigger.getAsDouble() <= 0.1) {
-      double setpoint = m_poseUtility.getBestVelocitySetpoint();
-      m_subsystem.setShooterSetpoint(setpoint);
+      // double setpoint = m_poseUtility.getBestVelocitySetpoint();
+      // m_subsystem.setShooterSetpoint(setpoint);
+      m_subsystem.setShooterSetpoint(65);
     } else if (leftTrigger.getAsDouble() >= 0.1) {
       m_subsystem.setShooterSetpoint(-60);
     } else {
       m_subsystem.setShooterSpeed(0);
     }
-    //m_subsystem.setShooterSetpoint(0);
   }
 
   // Called when the command is initially scheduled.

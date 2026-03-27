@@ -19,6 +19,8 @@ public class FeederCommands extends Command {
   private DoubleSupplier leftTrigger;
   private DoubleSupplier rightTrigger;
 
+  private long timeout;
+
   /**
    * Creates a new ExampleCommand.
    *
@@ -27,6 +29,7 @@ public class FeederCommands extends Command {
   public FeederCommands(FeederSubsystem subsystem, DoubleSupplier leftTrigger, DoubleSupplier rightTrigger) {
     this.leftTrigger = leftTrigger;
     this.rightTrigger = rightTrigger;
+    this.timeout = 0;
 
     m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -36,14 +39,13 @@ public class FeederCommands extends Command {
   @Override
   public void execute(){
 
-    if(Math.abs(leftTrigger.getAsDouble() - rightTrigger.getAsDouble()) > 0.1) {
-
+  
+    if(Math.abs(leftTrigger.getAsDouble() - rightTrigger.getAsDouble()) >= 0.1 && timeout >= System.currentTimeMillis()) {
+      timeout = System.currentTimeMillis() + 2000;
       m_subsystem.feedSpeed((rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) * 0.5);
-
-    } else {
-
+    } else if(Math.abs(leftTrigger.getAsDouble() - rightTrigger.getAsDouble()) < 0.1) {
+      timeout = 0;
       m_subsystem.feedSpeed(0);
-
     }
   }
 

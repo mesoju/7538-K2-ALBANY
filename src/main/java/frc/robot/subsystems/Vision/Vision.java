@@ -74,7 +74,7 @@ public class Vision extends SubsystemBase {
         LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-right");
       
       if (leftEstimate.tagCount > 0) {
-        drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 99999));
+        drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.0, 0.0, 99999));
         drivetrain.addVisionMeasurement(
           leftEstimate.pose, 
           Utils.fpgaToCurrentTime( leftEstimate.timestampSeconds )
@@ -82,7 +82,7 @@ public class Vision extends SubsystemBase {
 
         SmartDashboard.putString("leftCamPose", "X: "+leftEstimate.pose.getY()+" | Y: "+leftEstimate.pose.getX());
       } else if (rightEstimate.tagCount > 0) {
-        drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 99999));
+        drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.0, 0.0, 99999));
         drivetrain.addVisionMeasurement(
           rightEstimate.pose,
           Utils.fpgaToCurrentTime( rightEstimate.timestampSeconds )
