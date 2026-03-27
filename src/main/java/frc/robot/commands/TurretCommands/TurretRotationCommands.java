@@ -41,7 +41,7 @@ public class TurretRotationCommands extends Command {
   public void execute(){
 
     if (!intervene && System.currentTimeMillis() >= lastUpdate) {
-      lastUpdate = System.currentTimeMillis() + 250;
+      lastUpdate = System.currentTimeMillis() + 50;
       Double angle = poseUtility.getBestFieldGoalAngle();
 
       m_subsystem.setTurretAngle(angle);

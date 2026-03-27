@@ -16,7 +16,8 @@ import java.security.PublicKey;
  */
 public final class Constants {
   public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
+    public static final double Sonic_Hedgehog_Protein = 1.4; // Phillip's Constant 
+    public static final double Oiler = 2.71; // Mr Oiled Up
   }
 
   public final class MotorConstants {
@@ -28,12 +29,12 @@ public final class Constants {
     public static final int TURRET_SHOOTER_MOTOR_ID = 20;
     public static final int TURRET_ROTATION_MOTOR_ID = 21;
     public static final int TURRET_HOOD_MOTOR_ID = 22; // REV SparkMax Motor
-    public static final int INTAKE_DEPLOY_ID = -1;
-    public static final int INTAKE_INDEXER_ID = -1;
+    public static final int INTAKE_DEPLOY_ID = 14;
+    public static final int INTAKE_INDEXER_ID = 15;
 
-    public static final double DEPLOY_SPEED = 0;
+    public static final double DEPLOY_SPEED = .22;
 
-    public static final double INDEXER_SPEED = 0;
+    public static final double INDEXER_SPEED = 0.55;
 
     }
 
@@ -50,13 +51,13 @@ public final class Constants {
     //40 : 195
     // 20 : 1
 
-    public static final int INTAKE_DEPLOY_ENCODER_ID = -1;
+    public static final int INTAKE_DEPLOY_ENCODER_ID = 17;
 
-    public static final int DEPLOY_POS = 0;
+    public static final double DEPLOY_POS = 0.304932;
 
-    public static final int INTAKE_TOLERANCE = 0;
+    public static final double INTAKE_TOLERANCE = .01;
 
-    public static final int RETRACT_POS = 0;
+    public static final double RETRACT_POS = 0;
 
     }
 
@@ -81,22 +82,16 @@ public final class Constants {
   }
   
   public final class ShooterConstants {
-    public static final double kFlywheelKs = 100.0; // V
-    public static final double kFlywheelKv = 100.0; // V/RPM
-    public static final double kFlywheelKa = 100.0; // V/ (RPM/s)
-    // Max setpoint for joystick control in RPM
-    public static final double kMaxSetpointValue = 1;
-
     public static final double kG = 0.0; // Output needed to overcome gravity
-    public static final double kS = 0.4; // Add 0.25 V output to overcome static friction
-    public static final double kV = 0.2; // A velocity target of 1 rps results in 0.12 V output
-    public static final double kA = 0.2; // An acceleration of 1 rps/s require 0.01 v output
-    public static final double kP = 6.0; // An error of 1 rotation results in 2.4 V output
+    public static final double kS = 0.0; // Add 0.25 V output to overcome static friction
+    public static final double kV = 0.13; // A velocity target of 1 rps results in 0.12 V output
+    public static final double kA = 0.02; // An acceleration of 1 rps/s require 0.01 v output
+    public static final double kP = 3.6; // An error of 1 rotation results in 2.4 V output
     public static final double kI = 0.0; // no output for integrated error
     public static final double kD = 0.1; // A velocity of 1 rps results in 0.1 V output
 
     public static final double CRUISEVELOCITY = 80;
-    public static final double ACCELERATION = 160;
+    public static final double ACCELERATION = 40;
     public static final double JERK = 0;
   }
 

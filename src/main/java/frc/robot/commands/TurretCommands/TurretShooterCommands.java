@@ -32,7 +32,6 @@ public class TurretShooterCommands extends Command {
     this.leftTrigger = leftTrigger;
     this.rightTrigger = rightTrigger;
 
-
     m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
@@ -44,10 +43,11 @@ public class TurretShooterCommands extends Command {
       double setpoint = m_poseUtility.getBestVelocitySetpoint();
       m_subsystem.setShooterSetpoint(setpoint);
     } else if (leftTrigger.getAsDouble() >= 0.1) {
-      m_subsystem.setShooterSetpoint(-70);
+      m_subsystem.setShooterSetpoint(-60);
     } else {
-      m_subsystem.setShooterSetpoint(0);
+      m_subsystem.setShooterSpeed(0);
     }
+    //m_subsystem.setShooterSetpoint(0);
   }
 
   // Called when the command is initially scheduled.

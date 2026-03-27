@@ -24,12 +24,14 @@ public class Deploy extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+      //intake.setDeploy(Constants.MotorConstants.DEPLOY_SPEED/2);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.setDeploy(Constants.MotorConstants.DEPLOY_SPEED);
+    intake.setDeploy(Constants.MotorConstants.DEPLOY_SPEED/2);
   }
 
   // Called once the command ends or is interrupted.
@@ -41,7 +43,7 @@ public class Deploy extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (intake.getEncoder() < (EncoderConstants.DEPLOY_POS - EncoderConstants.INTAKE_TOLERANCE)) {
+    if (intake.getEncoder() > (EncoderConstants.DEPLOY_POS - EncoderConstants.INTAKE_TOLERANCE)) {
       return true;
     } else {
       return false;

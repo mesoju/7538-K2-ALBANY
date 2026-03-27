@@ -38,7 +38,7 @@ public class SpindexerCommands extends Command {
   @Override
   public void execute(){
 
-    if(Math.abs(rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) > 0.1) {
+    if(Math.abs(rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) >= 0.1) {
 
       m_subsystem.feedSpeed((rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) * 0.8);
 

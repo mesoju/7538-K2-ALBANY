@@ -12,6 +12,8 @@ import frc.robot.Constants.CameraConfigs;
 
 import java.util.Optional;
 
+import com.ctre.phoenix6.Utils;
+
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -59,8 +61,8 @@ public class Vision extends SubsystemBase {
       double heading = drivetrain.getState().Pose.getRotation().getDegrees();
       //double heading = 0;
 
-      LimelightHelpers.SetIMUMode(leftCamName, 4);
-      LimelightHelpers.SetIMUMode(RightCamName, 4);
+      LimelightHelpers.SetIMUMode(leftCamName, 1);
+      LimelightHelpers.SetIMUMode(RightCamName, 1);
 
       LimelightHelpers.SetRobotOrientation(leftCamName, heading, 0, 0, 0, 0, 0);          
       LimelightHelpers.SetRobotOrientation(RightCamName, heading, 0, 0, 0, 0, 0);
@@ -72,17 +74,22 @@ public class Vision extends SubsystemBase {
         LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-right");
       
       if (leftEstimate.tagCount > 0) {
-        drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.15, 0.15, 99999));
+        drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 99999));
         drivetrain.addVisionMeasurement(
-          leftEstimate.pose,
-          leftEstimate.timestampSeconds
+          leftEstimate.pose, 
+          Utils.fpgaToCurrentTime( leftEstimate.timestampSeconds )
         );
+
+        SmartDashboard.putString("leftCamPose", "X: "+leftEstimate.pose.getY()+" | Y: "+leftEstimate.pose.getX());
       } else if (rightEstimate.tagCount > 0) {
-        drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.15, 0.15, 99999));
+        drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.7, 0.7, 99999));
         drivetrain.addVisionMeasurement(
           rightEstimate.pose,
-          rightEstimate.timestampSeconds
+          Utils.fpgaToCurrentTime( rightEstimate.timestampSeconds )
         );
+
+        SmartDashboard.putString("righCamPose", "X: "+rightEstimate.pose.getY()+" | Y: "+rightEstimate.pose.getX());
+
       }
         this.poseUtility.updatePose2D(drivetrain.getState().Pose);
 

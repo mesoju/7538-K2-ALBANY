@@ -35,6 +35,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
@@ -54,16 +55,20 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Vision.Vision;
 import frc.robot.utility.pose2Dutility;
 import frc.robot.Constants.MotorConstants;
+import frc.robot.Constants.OperatorConstants;
 //Commands
 import frc.robot.commands.FeederCommands;
 import frc.robot.commands.SpindexerCommands;
 import frc.robot.commands.IntakeCommands.Deploy;
 import frc.robot.commands.IntakeCommands.Retract;
+import frc.robot.commands.Manual.ManualTurretRotation;
 import frc.robot.commands.TurretCommands.TurretRotationCommands;
 import frc.robot.commands.TurretCommands.TurretShooterCommands;
 
 public class RobotContainer {
     public static boolean intakeToggle = false;
+
+    public static boolean  phillip_died_order_67 = false; // let rii or vincent take over
 
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
@@ -80,6 +85,8 @@ public class RobotContainer {
     // Controllers
     private final XboxController driverController = new XboxController(0);
     private final CommandXboxController DriverController = new CommandXboxController(0);
+
+    private final XboxController secondaryController = new XboxController(1);
 
     // Subsystems
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -104,43 +111,59 @@ public class RobotContainer {
     private final Vision vision = new Vision(drivetrain, poseUtility);
 
     public RobotContainer() {
-          
-        feederSubsystem.setDefaultCommand(new FeederCommands(
-            feederSubsystem, 
-            driverController::getLeftTriggerAxis, 
-            driverController::getRightTriggerAxis
-        ));
+        phillip_died_order_67 = false;
 
+        //CommandScheduler.getInstance().schedule(new Deploy(intakeSubsystem));
+        //new Deploy(intakeSubsystem);
 
-        spindexerSubsystem.setDefaultCommand(new SpindexerCommands(
-            spindexerSubsystem, 
-            driverController::getLeftTriggerAxis, 
-            driverController::getRightTriggerAxis
-        ));
+        Commands.runOnce(() -> {new Deploy(intakeSubsystem);}, intakeSubsystem).schedule();
 
-        turretShooterSubsystem.setDefaultCommand(new TurretShooterCommands(turretShooterSubsystem,
-            poseUtility,
-            driverController::getLeftTriggerAxis,
-            driverController::getRightTriggerAxis
-        ));
-
-        turretRotationSubsystem.setDefaultCommand(new TurretRotationCommands(
-            turretRotationSubsystem, 
-            poseUtility
-        ));
+        setCommandControl();
 
         configureBindings();
     }
 
-   private void configureBindings() {
+    private void setCommandControl() {
+        if (!phillip_died_order_67) {
+            feederSubsystem.setDefaultCommand(new FeederCommands(
+                feederSubsystem, 
+                driverController::getLeftTriggerAxis, 
+                driverController::getRightTriggerAxis
+            ));
+
+            spindexerSubsystem.setDefaultCommand(new SpindexerCommands(
+                spindexerSubsystem, 
+                driverController::getLeftTriggerAxis, 
+                driverController::getRightTriggerAxis
+            ));
+
+            turretShooterSubsystem.setDefaultCommand(new TurretShooterCommands(turretShooterSubsystem,
+                poseUtility,
+                driverController::getLeftTriggerAxis,
+                driverController::getRightTriggerAxis
+            ));
+
+            turretRotationSubsystem.setDefaultCommand(new TurretRotationCommands(
+                turretRotationSubsystem, 
+                poseUtility
+            ));
+        } else { // Phillip died... RIP
+            turretRotationSubsystem.setDefaultCommand(new ManualTurretRotation(
+                turretRotationSubsystem,
+                secondaryController::getLeftX
+            ));
+        }
+    }
+
+    private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-DriverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-DriverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-DriverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-Math.copySign((Math.pow(Math.abs(DriverController.getLeftY()), OperatorConstants.Sonic_Hedgehog_Protein)), DriverController.getLeftY()) * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-Math.copySign((Math.pow(Math.abs(DriverController.getLeftX()), OperatorConstants.Sonic_Hedgehog_Protein)), DriverController.getLeftX()) * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(DriverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
 
@@ -163,24 +186,43 @@ public class RobotContainer {
         DriverController.start().and(DriverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         DriverController.start().and(DriverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-        // DriverController.a().onTrue(new Deploy(intakeSubsystem));
-        // DriverController.b().onTrue(new Retract(intakeSubsystem));
+        DriverController.y().onTrue(new Deploy(intakeSubsystem));
+        DriverController.b().onTrue(new Retract(intakeSubsystem));
 
-        DriverController.y().onTrue(Commands.parallel(
-            intakeToggle ? new Deploy(intakeSubsystem) : new Retract(intakeSubsystem),
-            Commands.runOnce(() -> {
-                intakeToggle = !intakeToggle;
-            })
-        ));
-        DriverController.leftBumper().onTrue(Commands.run(() -> {
+        // DriverController.y().onTrue(Commands.parallel(
+        //     intakeToggle ? new Deploy(intakeSubsystem) : new Retract(intakeSubsystem),
+        //     Commands.runOnce(() -> {
+        //         intakeToggle = !intakeToggle;
+        //     })
+        // ));
+        DriverController.leftBumper().onTrue(Commands.runOnce(() -> {
+            intakeSubsystem.setIndexer(-MotorConstants.INDEXER_SPEED);
+        }));
+        DriverController.rightBumper().onTrue(Commands.runOnce(() -> {
             intakeSubsystem.setIndexer(MotorConstants.INDEXER_SPEED);
         }));
-        DriverController.rightBumper().onTrue(Commands.run(() -> {
-            intakeSubsystem.setIndexer(-MotorConstants.INDEXER_SPEED);
+        DriverController.leftBumper().onFalse(Commands.runOnce(() -> {
+            intakeSubsystem.setIndexer(0);
+        }));
+        DriverController.rightBumper().onFalse(Commands.runOnce(() -> {
+            intakeSubsystem.setIndexer(0);
+        }));
+
+        DriverController.x().onTrue(
+            drivetrain.runOnce(drivetrain::seedFieldCentric)
+        );
+
+        DriverController.a().onTrue(Commands.runOnce(() -> {
+            phillip_died_order_67 = !phillip_died_order_67;
+            System.out.println(phillip_died_order_67);
+
+            setCommandControl();
         }));
 
         // Reset the field-centric heading on left bumper press.
-        DriverController.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        // DriverController.start().onTrue(
+        //     drivetrain.runOnce(drivetrain::seedFieldCentric)
+        // );
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }

@@ -39,7 +39,7 @@ public class Retract extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (intake.getEncoder() > (EncoderConstants.RETRACT_POS + EncoderConstants.INTAKE_TOLERANCE)) {
+    if (intake.getEncoder() < (EncoderConstants.RETRACT_POS + EncoderConstants.INTAKE_TOLERANCE)) {
       return true;
     } else {
       return false;
