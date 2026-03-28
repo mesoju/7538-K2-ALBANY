@@ -34,7 +34,7 @@ public final class Constants {
 
     public static final double DEPLOY_SPEED = .22;
 
-    public static final double INDEXER_SPEED = 0.63;
+    public static final double INDEXER_SPEED = 0.57;
 
     }
 
@@ -88,7 +88,7 @@ public final class Constants {
     public static final double kA = 0.02; // An acceleration of 1 rps/s require 0.01 v output
     public static final double kP = 4.8; // An error of 1 rotation results in 2.4 V output
     public static final double kI = 0.0; // no output for integrated error
-    public static final double kD = 0.1; // A velocity of 1 rps results in 0.1 V output
+    public static final double kD = 0.15; // A velocity of 1 rps results in 0.1 V output
 
     public static final double CRUISEVELOCITY = 80;
     public static final double ACCELERATION = 40;

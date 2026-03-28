@@ -61,7 +61,7 @@ public class TurretShooterSubsystem extends SubsystemBase {
     //double EncoderVelocity = shooterMotor.getVelocity().getValueAsDouble() > 1 ? shooterMotor.getVelocity().getValueAsDouble() : 0;
     SmartDashboard.putNumber("Setpoint", setpoint);
 
-    setpoint = 70;
+    setpoint = 55;
 
     MotionMagicVelocityVoltage m_request = new MotionMagicVelocityVoltage(setpoint);
 
