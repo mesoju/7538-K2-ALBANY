@@ -94,10 +94,15 @@ public class pose2Dutility {
 
         if (position[0] != null && position[1] != null) {
 
-            double dx = position[0] - turretPose2d.getY();
-            double dy = position[1] - turretPose2d.getX();
+            double dx = position[0] - turretPose2d.getX();
+            double dy = position[1] - turretPose2d.getY();
 
-            Rotation2d angle = Rotation2d.fromRadians(Math.atan2(dy, -dx) * Math.toRadians(90)); // #1
+            double modifier = 0;
+            if (color == Alliance.Red) {
+                modifier = 180;
+            }
+
+            Rotation2d angle = Rotation2d.fromRadians(Math.atan2(dy, dx) + Math.toRadians(modifier)); // #1
             Rotation2d relative = angle.minus(turretPose2d.getRotation());
 
             return relative.getDegrees();

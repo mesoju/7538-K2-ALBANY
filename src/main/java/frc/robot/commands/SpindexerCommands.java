@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import frc.robot.Constants;
+import frc.robot.Constants.MotorConstants;
 import frc.robot.subsystems.SpindexerSubsystem;
 
 import java.util.function.DoubleSupplier;
@@ -40,14 +42,26 @@ public class SpindexerCommands extends Command {
 
   @Override
   public void execute(){
-    if(Math.abs(rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) >= 0.1 && timeout == 0) {
-      timeout = System.currentTimeMillis() + 1500;
-    } else if(Math.abs(rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) >= 0.1 && System.currentTimeMillis() >= timeout && timeout != 0) {
-      m_subsystem.feedSpeed(Math.copySign(0.8, rightTrigger.getAsDouble() - leftTrigger.getAsDouble()));
+    // if(Math.abs(rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) >= 0.1 && timeout == 0) {
+    //   timeout = System.currentTimeMillis() + MotorConstants.INDEXER_DELAY;
+    // } else if(Math.abs(rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) >= 0.1 && System.currentTimeMillis() >= timeout && timeout != 0) {
+    //   m_subsystem.feedSpeed(Math.copySign(0.8, rightTrigger.getAsDouble() - leftTrigger.getAsDouble()));
+    // } else if(Math.abs(rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) < 0.1) {
+    //   timeout = 0;
+    //   m_subsystem.feedSpeed(0);
+
+    // }
+
+    if(Math.abs(leftTrigger.getAsDouble()) >= 0.1) {
+      timeout = 0;
+      m_subsystem.feedSpeed(-0.8);
+    } else if(Math.abs(rightTrigger.getAsDouble()) >= 0.1 && timeout == 0) {
+      timeout = System.currentTimeMillis() + MotorConstants.INDEXER_DELAY;
+    } else if(Math.abs(rightTrigger.getAsDouble()) >= 0.1 && System.currentTimeMillis() >= timeout && timeout != 0) {
+      m_subsystem.feedSpeed(0.8);
     } else if(Math.abs(rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) < 0.1) {
       timeout = 0;
       m_subsystem.feedSpeed(0);
-
     }
 
   }

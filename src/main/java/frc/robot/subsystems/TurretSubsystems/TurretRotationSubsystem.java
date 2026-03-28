@@ -93,15 +93,15 @@ public class TurretRotationSubsystem extends SubsystemBase {
   }
 
   public void setTurretAngle(double degrees) {
-    // // Let's not kill our robot through strangulation :P
-    // degrees = MathUtil.clamp(degrees, -180, 180);
+    // Let's not kill our robot through strangulation :P
+    degrees = MathUtil.clamp(degrees, -180, 180);
     
-    // if (!isTurretHoming) { // Make sure turret is not currently in homing process
-    //   final MotionMagicVoltage m_request = new MotionMagicVoltage(0); // Create a new voltage request
-    //   double rotation = Units.degreesToRotations(degrees); // Voltage request based on position from rotations. Encoder reads 1:1 with mechanism.
-    //   // set target position to # rotations
-    //   turretRotationMotor.setControl(m_request.withPosition(rotation));
-    // }
+    if (!isTurretHoming) { // Make sure turret is not currently in homing process
+      final MotionMagicVoltage m_request = new MotionMagicVoltage(0); // Create a new voltage request
+      double rotation = Units.degreesToRotations(degrees); // Voltage request based on position from rotations. Encoder reads 1:1 with mechanism.
+      // set target position to # rotations
+      turretRotationMotor.setControl(m_request.withPosition(rotation));
+    }
   }
 
   public void zeroEncoderFromInit() {

@@ -77,18 +77,18 @@ public class Vision extends SubsystemBase {
         drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.0, 0.0, 99999));
         drivetrain.addVisionMeasurement(
           leftEstimate.pose, 
-          Utils.fpgaToCurrentTime( leftEstimate.timestampSeconds )
+          leftEstimate.timestampSeconds
         );
 
-        SmartDashboard.putString("leftCamPose", "X: "+leftEstimate.pose.getY()+" | Y: "+leftEstimate.pose.getX());
+        SmartDashboard.putString("leftCamPose", "X: "+leftEstimate.pose.getX()+" | Y: "+leftEstimate.pose.getY());
       } else if (rightEstimate.tagCount > 0) {
         drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(0.0, 0.0, 99999));
         drivetrain.addVisionMeasurement(
           rightEstimate.pose,
-          Utils.fpgaToCurrentTime( rightEstimate.timestampSeconds )
+          rightEstimate.timestampSeconds
         );
 
-        SmartDashboard.putString("righCamPose", "X: "+rightEstimate.pose.getY()+" | Y: "+rightEstimate.pose.getX());
+        SmartDashboard.putString("righCamPose", "X: "+rightEstimate.pose.getX()+" | Y: "+rightEstimate.pose.getY());
 
       }
         this.poseUtility.updatePose2D(drivetrain.getState().Pose);

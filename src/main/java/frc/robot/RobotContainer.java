@@ -41,6 +41,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
@@ -117,6 +118,8 @@ public class RobotContainer {
         //new Deploy(intakeSubsystem);
 
         Commands.runOnce(() -> {new Deploy(intakeSubsystem);}, intakeSubsystem).schedule();
+
+        poseUtility.updateAlliance(DriverStation.getAlliance());
 
         setCommandControl();
 

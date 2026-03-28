@@ -36,7 +36,8 @@ public final class Constants {
 
     public static final double INDEXER_SPEED = 0.57;
 
-    }
+    public static final int INDEXER_DELAY = 750; // in ms btw
+  }
 
 
 

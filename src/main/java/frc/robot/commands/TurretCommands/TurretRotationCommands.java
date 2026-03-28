@@ -42,10 +42,10 @@ public class TurretRotationCommands extends Command {
 
     if (!intervene && System.currentTimeMillis() >= lastUpdate) {
       lastUpdate = System.currentTimeMillis() + 100;
-      //Double angle = poseUtility.getBestFieldGoalAngle();
+      Double angle = poseUtility.getBestFieldGoalAngle();
 
-      //m_subsystem.setTurretAngle(angle);
-      m_subsystem.setTurretAngle(0);
+      m_subsystem.setTurretAngle(angle);
+      //m_subsystem.setTurretAngle(0);
     }
 
   }
