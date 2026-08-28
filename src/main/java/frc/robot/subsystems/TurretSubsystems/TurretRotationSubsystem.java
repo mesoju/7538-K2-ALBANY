@@ -94,7 +94,7 @@ public class TurretRotationSubsystem extends SubsystemBase {
 
   public void setTurretAngle(double degrees) {
     // Let's not kill our robot through strangulation :P
-    degrees = MathUtil.clamp(degrees, -180, 180);
+    degrees = MathUtil.clamp(degrees, -165, 180);
     
     if (!isTurretHoming) { // Make sure turret is not currently in homing process
       final MotionMagicVoltage m_request = new MotionMagicVoltage(0); // Create a new voltage request
@@ -148,11 +148,11 @@ public class TurretRotationSubsystem extends SubsystemBase {
     try {
       // We should allow the thread to sleep for a second before applying changes to account for overshoot and not apply encoder values from muddy data.
       Thread.sleep(500);
-      turretRotationCANCoder.setPosition(0);
+      turretRotationCANCoder.setPosition(Units.degreesToRotations(0));
       isTurretHoming = false;
 
     } catch (InterruptedException e) {
-        turretRotationCANCoder.setPosition(0);
+        turretRotationCANCoder.setPosition(Units.degreesToRotations(0));
         e.printStackTrace();
         isTurretHoming = false;
         

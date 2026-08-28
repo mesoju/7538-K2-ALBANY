@@ -22,26 +22,13 @@ public class pose2Dutility {
     private Pose2d currentPose2d;
     private Pose2d turretPose2d;
 
-    private Optional<Alliance> alliance;
-    private Alliance color;
-
     private boolean isTurretBusy = false;
     private boolean areTagsDetected = false;
 
     // Constructors 
     public pose2Dutility(CommandSwerveDrivetrain drivetrain) {
         this.drivetrain = drivetrain;
-        this.alliance = DriverStation.getAlliance();
         this.currentPose2d = new Pose2d();
-    }
-
-    // Private Methods
-    private void setAllianceColor() {
-        if (this.alliance.isPresent()) {
-            this.color = this.alliance.get();
-        } else {
-            this.color = Alliance.Blue;
-        }
     }
 
     // Public Methods
@@ -60,11 +47,6 @@ public class pose2Dutility {
 
 
         SmartDashboard.putString("TurretPose", "X: "+turretPose2d.getX()+" | Y: "+turretPose2d.getY()+" | Yaw: "+turretPose2d.getRotation().getDegrees());
-    }
-
-    public void updateAlliance(Optional<Alliance> alliance) {
-        this.alliance = alliance;
-        setAllianceColor();
     }
 
     // Calculations
@@ -98,9 +80,6 @@ public class pose2Dutility {
             double dy = position[1] - turretPose2d.getY();
 
             double modifier = 0;
-            if (color == Alliance.Red) {
-                modifier = 180;
-            }
 
             Rotation2d angle = Rotation2d.fromRadians(Math.atan2(dy, dx) + Math.toRadians(modifier)); // #1
             Rotation2d relative = angle.minus(turretPose2d.getRotation());
@@ -137,6 +116,19 @@ public class pose2Dutility {
 
     // Returns a Double[]: position, where {x, y, h, encoder_velocity} and position represents best possible target given robot pose.
     public Double[] getBestFieldGoalPosition() {
+        Optional<Alliance> alliance = DriverStation.getAlliance();
+        Alliance color = null;
+
+        if (alliance.isPresent()) {
+            if (alliance.get() == Alliance.Red) {
+                color = Alliance.Red;
+            } else if (alliance.get() == Alliance.Blue) {
+                color = Alliance.Blue;
+            }
+        } else {
+            color = Alliance.Blue;
+        }
+
         Double[] position = {null, null, null, null};
 
         if (color == Alliance.Blue) { // Our Alliance is Blue

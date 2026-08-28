@@ -7,6 +7,7 @@ package frc.robot.commands.TurretCommands;
 import java.util.function.DoubleSupplier;
 import java.util.function.BooleanSupplier;
 
+import edu.wpi.first.wpilibj.DriverStation;
 // import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.TurretSubsystems.TurretRotationSubsystem;
@@ -39,6 +40,8 @@ public class TurretRotationCommands extends Command {
 
   @Override
   public void execute(){
+
+    //poseUtility.updateAlliance(DriverStation.getAlliance());
 
     if (!intervene && System.currentTimeMillis() >= lastUpdate) {
       lastUpdate = System.currentTimeMillis() + 100;

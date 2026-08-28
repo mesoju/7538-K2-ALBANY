@@ -54,11 +54,11 @@ public class SpindexerCommands extends Command {
 
     if(Math.abs(leftTrigger.getAsDouble()) >= 0.1) {
       timeout = 0;
-      m_subsystem.feedSpeed(-0.8);
+      m_subsystem.feedSpeed(-0.4);
     } else if(Math.abs(rightTrigger.getAsDouble()) >= 0.1 && timeout == 0) {
       timeout = System.currentTimeMillis() + MotorConstants.INDEXER_DELAY;
     } else if(Math.abs(rightTrigger.getAsDouble()) >= 0.1 && System.currentTimeMillis() >= timeout && timeout != 0) {
-      m_subsystem.feedSpeed(0.8);
+      m_subsystem.feedSpeed(0.4);
     } else if(Math.abs(rightTrigger.getAsDouble() - leftTrigger.getAsDouble()) < 0.1) {
       timeout = 0;
       m_subsystem.feedSpeed(0);

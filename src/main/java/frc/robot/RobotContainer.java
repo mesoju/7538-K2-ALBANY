@@ -33,17 +33,19 @@ import java.util.Optional;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import com.pathplanner.lib.auto.NamedCommands;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 // Subsystems
 import frc.robot.subsystems.FeederSubsystem;
@@ -101,17 +103,15 @@ public class RobotContainer {
     private final TurretShooterSubsystem turretShooterSubsystem = new TurretShooterSubsystem();
     private final TurretRotationSubsystem turretRotationSubsystem = new TurretRotationSubsystem();
 
-    // Field Data
-
-    private Optional<Alliance> alliance = null;
-    private Alliance color = null;
-
     // public final Vision visionSubsystem = new Vision();
 
     private final pose2Dutility poseUtility = new pose2Dutility(drivetrain);
     private final Vision vision = new Vision(drivetrain, poseUtility);
 
     public RobotContainer() {
+        
+        setAutonomousCommands();
+
         phillip_died_order_67 = false;
 
         //CommandScheduler.getInstance().schedule(new Deploy(intakeSubsystem));
@@ -119,11 +119,16 @@ public class RobotContainer {
 
         Commands.runOnce(() -> {new Deploy(intakeSubsystem);}, intakeSubsystem).schedule();
 
-        poseUtility.updateAlliance(DriverStation.getAlliance());
-
         setCommandControl();
 
         configureBindings();
+    }
+
+    private void setAutonomousCommands() {
+        //Named Commands to use in Autonomous
+
+        //NamedCommands.registerCommand("Shoot", new RunCommand(() -> turretShooterSubsystem.setDefaultCommand(new TurretShooterCommands(turretShooterSubsystem, poseUtility, 0.0, 1.0))));
+        //NamedCommands.registerCommand("Shooer", new RunCommand(() -> spindexerSubsystem.setDefaultCommand(new SpindexerCommands(spindexerSubsystem, 0.1, 0))));
     }
 
     private void setCommandControl() {
@@ -213,6 +218,8 @@ public class RobotContainer {
 
         DriverController.x().onTrue(
             drivetrain.runOnce(drivetrain::seedFieldCentric)
+        ).onTrue(
+            Commands.runOnce(() -> drivetrain.resetPose(Pose2d.kZero), drivetrain)
         );
 
         // DriverController.a().onTrue(Commands.runOnce(() -> {

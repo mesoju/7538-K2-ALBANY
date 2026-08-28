@@ -22,6 +22,9 @@ public class TurretShooterCommands extends Command {
   private DoubleSupplier leftTrigger;
   private DoubleSupplier rightTrigger;
 
+  private double left;
+  private double right;
+
   /**
    * Creates a new TurretShooterCommands.
    *
@@ -31,6 +34,17 @@ public class TurretShooterCommands extends Command {
     this.m_poseUtility = m_poseUtility;
     this.leftTrigger = leftTrigger;
     this.rightTrigger = rightTrigger;
+
+    m_subsystem = subsystem;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(subsystem);
+  }
+
+  public TurretShooterCommands(TurretShooterSubsystem subsystem, pose2Dutility m_poseUtility, double leftTrigger, double rightTrigger) {
+    this.m_poseUtility = m_poseUtility;
+
+    this.left = leftTrigger;
+    this.right = rightTrigger;
 
     m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.

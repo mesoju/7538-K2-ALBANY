@@ -26,9 +26,6 @@ public class Vision extends SubsystemBase {
 
   private final String leftCamName = "limelight-left";
   private final String RightCamName = "limelight-right";
-
-  private Optional<Alliance> alliance;
-  private Alliance color;
   
   private boolean enabled = true;
 
@@ -101,15 +98,5 @@ public class Vision extends SubsystemBase {
 
   public void toggleLimelight(boolean enable) {
     this.enabled = enable;
-  }
-
-  public void setAlliance(Optional<Alliance> alliance) {
-    this.alliance = alliance;
-
-    if (this.alliance.isPresent()) {
-        this.color = this.alliance.get();
-    } else {
-        this.color = Alliance.Blue;
-    }
   }
 }
