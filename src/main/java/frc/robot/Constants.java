@@ -34,7 +34,7 @@ public final class Constants {
 
     public static final double DEPLOY_SPEED = .22;
 
-    public static final double INDEXER_SPEED = 0.57;
+    public static final double INDEXER_SPEED = 0.1;
 
     public static final int INDEXER_DELAY = 750; // in ms btw
   }
@@ -113,6 +113,8 @@ public final class Constants {
     public static final double RotorToSensorRatio = 45.5;
 
     public static final double[] turretOffsets = {-0.12065, 24, -0.14605}; // {-4.75, 24, -5.25};
+
+    public static final double TurretCalculationOffset = 40; // For compatibility with an off-centered 180CW/CCW origin. In degrees.
   }
 
   public final class HoodConstants {

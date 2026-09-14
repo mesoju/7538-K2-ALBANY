@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.MotorConstants;
 import frc.robot.Constants.TurretConstants;
+import frc.robot.Constants;
 import frc.robot.Constants.EncoderConstants;
 
 import com.ctre.phoenix6.CANBus;
@@ -94,13 +95,16 @@ public class TurretRotationSubsystem extends SubsystemBase {
 
   public void setTurretAngle(double degrees) {
     // Let's not kill our robot through strangulation :P
-    degrees = MathUtil.clamp(degrees, -165, 180);
+
+    //degrees += TurretConstants.TurretCalculationOffset;
+    degrees = MathUtil.clamp(degrees, (-180 - TurretConstants.TurretCalculationOffset), (180 - TurretConstants.TurretCalculationOffset));
     
     if (!isTurretHoming) { // Make sure turret is not currently in homing process
       final MotionMagicVoltage m_request = new MotionMagicVoltage(0); // Create a new voltage request
       double rotation = Units.degreesToRotations(degrees); // Voltage request based on position from rotations. Encoder reads 1:1 with mechanism.
       // set target position to # rotations
       turretRotationMotor.setControl(m_request.withPosition(rotation));
+      SmartDashboard.putNumber("Final Turret Rotation", degrees);
     }
   }
 
@@ -115,9 +119,16 @@ public class TurretRotationSubsystem extends SubsystemBase {
     // Case 3: Limit switch 1 is detected -> Rehome in other direction until both limit switches are hit simultaneously
     // * Add an encoder deadband of approximately 5 deg
 
-    forceRotationMotorSpeed(0.5); // Initially go CCW until a limit switch is hit.
+    forceRotationMotorSpeed(0.329); // Initially go CCW until a limit switch is hit.
     while (isTurretBusy) {
-      
+        if (homeDeadband != null) {
+          //SmartDashboard.putNumber("HomeDeadband", Units.rotationsToDegrees( Math.abs(turretRotationCANCoder.getPosition().getValueAsDouble() - homeDeadband) ));
+        }
+
+        //SmartDashboard.putBoolean("TurretLimitSwitch0", ls_0.get());
+        //SmartDashboard.putBoolean("TurretLimitSwitch1", ls_1.get());
+        //SmartDashboard.putNumber("EncoderValue", Units.rotationsToDegrees(turretRotationMotor.getPosition().getValueAsDouble()));
+
         if (!ls_0.get() && !ls_1.get()) { // Case 1 (simultaneously pressed with no deadband)
           isTurretBusy = false;
           forceRotationMotorSpeed(0);
@@ -126,12 +137,12 @@ public class TurretRotationSubsystem extends SubsystemBase {
           homeDeadband = turretRotationCANCoder.getPosition().getValueAsDouble();
           limitSwitches[0] = ls_0.get();
           limitSwitches[1] = ls_1.get();
-        } else if (homeDeadband != null && (Units.rotationsToDegrees( Math.abs(turretRotationCANCoder.getPosition().getValueAsDouble() - homeDeadband) ) > 5.0 ) ) {
+        } else if (homeDeadband != null && (Units.rotationsToDegrees( Math.abs(turretRotationCANCoder.getPosition().getValueAsDouble() - homeDeadband) ) > 20.0 ) ) {
           limitSwitches[0] = true;
           limitSwitches[1] = true;
           homeDeadband = null;
           forceRotationMotorSpeed(-0.2);
-        } else if (homeDeadband != null && (Units.rotationsToDegrees( Math.abs(turretRotationCANCoder.getPosition().getValueAsDouble() - homeDeadband)) <= 5.0 ) && (!ls_0.get() || !ls_0.get())) {
+        } else if (homeDeadband != null && (Units.rotationsToDegrees( Math.abs(turretRotationCANCoder.getPosition().getValueAsDouble() - homeDeadband)) <= 20.0 ) && (!ls_0.get() || !ls_0.get())) {
           limitSwitches[0] = ls_0.get();
           limitSwitches[1] = ls_1.get();
 

@@ -54,20 +54,18 @@ public class TurretShooterSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("turretSpeed", shooterMotor.getVelocity().getValueAsDouble());
+    //SmartDashboard.putNumber("turretSpeed", shooterMotor.getVelocity().getValueAsDouble());
   }
 
   public void setShooterSetpoint(double setpoint) {
     //double EncoderVelocity = shooterMotor.getVelocity().getValueAsDouble() > 1 ? shooterMotor.getVelocity().getValueAsDouble() : 0;
-    SmartDashboard.putNumber("Setpoint", setpoint);
+    //SmartDashboard.putNumber("Setpoint", setpoint);
 
     setpoint = 55;
 
     MotionMagicVelocityVoltage m_request = new MotionMagicVelocityVoltage(setpoint);
 
     shooterMotor.setControl(m_request);
-
-    //shooterMotor.set(0.8);
   }
 
   public void setShooterSpeed(double speed) {

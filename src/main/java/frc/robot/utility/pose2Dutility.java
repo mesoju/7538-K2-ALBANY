@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.Constants.TurretConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 /** Add your docs here. */
@@ -33,6 +34,11 @@ public class pose2Dutility {
 
     // Public Methods
     // Set Instance Variables
+
+    public static double mod(double a, double b) {
+        return ((a % b) + b) % b;
+    }
+
     public void updatePose2D(Pose2d visionPose2d) {
         currentPose2d = visionPose2d;
         double theta = currentPose2d.getRotation().getRadians();
@@ -45,8 +51,7 @@ public class pose2Dutility {
 
         turretPose2d = currentPose2d;
 
-
-        SmartDashboard.putString("TurretPose", "X: "+turretPose2d.getX()+" | Y: "+turretPose2d.getY()+" | Yaw: "+turretPose2d.getRotation().getDegrees());
+        //SmartDashboard.putString("TurretPose", "X: "+turretPose2d.getX()+" | Y: "+turretPose2d.getY()+" | Yaw: "+turretPose2d.getRotation().getDegrees());
     }
 
     // Calculations
@@ -74,17 +79,24 @@ public class pose2Dutility {
 
     public Double getAngleToPositionTurret(Double[] position) {
 
-        if (position[0] != null && position[1] != null) {
+        if (position[0] != null && position[1] != null) { // Validate that the positions aren't null. 
 
             double dx = position[0] - turretPose2d.getX();
             double dy = position[1] - turretPose2d.getY();
 
-            double modifier = 0;
+            double modifier = 180 - TurretConstants.TurretCalculationOffset;
 
-            Rotation2d angle = Rotation2d.fromRadians(Math.atan2(dy, dx) + Math.toRadians(modifier)); // #1
+            // Why in the actual booty cheeks does Java not have true modulo? Made me run around for 3 hours
+            double customBoundsAtan2 = mod( Math.atan2(dy, dx) + Math.toRadians(modifier), Math.toRadians(360) ) - Math.toRadians(modifier);
+            Rotation2d angle = Rotation2d.fromRadians(Math.atan2(dy, dx)); // #1
             Rotation2d relative = angle.minus(turretPose2d.getRotation());
 
-            return relative.getDegrees();
+            double degrees = relative.getDegrees();
+            if (degrees > 140) {
+                degrees -= 360;
+            }
+
+            return degrees;
         }
 
         return 0.0;

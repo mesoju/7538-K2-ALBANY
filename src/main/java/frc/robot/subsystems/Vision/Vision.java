@@ -9,6 +9,7 @@ import frc.robot.utility.pose2Dutility;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.LimelightHelpers;
 import frc.robot.Constants.CameraConfigs;
+import frc.robot.Constants.TurretConstants;
 
 import java.util.Optional;
 
@@ -92,7 +93,7 @@ public class Vision extends SubsystemBase {
 
         //double angle = this.poseUtility.getAngleToPositionTurret(this.color == Alliance.Blue ? Constants.FieldQuadrants.BlueAllyHub : Constants.FieldQuadrants.RedAllyHub);
         double angle = this.poseUtility.getBestFieldGoalAngle();
-        SmartDashboard.putNumber("DesiredTurretAngle", -angle);
+        SmartDashboard.putNumber("DesiredTurretAngle", angle);
     }
   }
 
