@@ -34,7 +34,7 @@ public final class Constants {
 
     public static final double DEPLOY_SPEED = .22;
 
-    public static final double INDEXER_SPEED = 0.1;
+    public static final double INDEXER_SPEED = 0.57;
 
     public static final int INDEXER_DELAY = 750; // in ms btw
   }
@@ -58,7 +58,7 @@ public final class Constants {
 
     public static final double INTAKE_TOLERANCE = .01;
 
-    public static final double RETRACT_POS = 0;
+    public static final double RETRACT_POS = -0.13;
 
     }
 

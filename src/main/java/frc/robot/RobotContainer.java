@@ -174,6 +174,11 @@ public class RobotContainer {
                     .withRotationalRate(DriverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
+
+        DriverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        DriverController.b().whileTrue(drivetrain.applyRequest(() ->
+            point.withModuleDirection(new Rotation2d(-DriverController.getLeftY(), -DriverController.getLeftX()))
+        ));
     }
 
     public void teleopPeriodic() {
@@ -194,11 +199,6 @@ public class RobotContainer {
         RobotModeTriggers.disabled().whileTrue(
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
-
-        DriverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        DriverController.b().whileTrue(drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-DriverController.getLeftY(), -DriverController.getLeftX()))
-        ));
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -248,7 +248,7 @@ public class RobotContainer {
             drivetrain.runOnce(drivetrain::seedFieldCentric),
             // Then slowly drive forward (away from us) for 5 seconds.
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(0.25)
+                drive.withVelocityX(0.05)
                     .withVelocityY(0)
                     .withRotationalRate(0)
             )

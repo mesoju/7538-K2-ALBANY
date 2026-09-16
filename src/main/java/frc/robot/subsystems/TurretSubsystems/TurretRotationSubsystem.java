@@ -119,7 +119,7 @@ public class TurretRotationSubsystem extends SubsystemBase {
     // Case 3: Limit switch 1 is detected -> Rehome in other direction until both limit switches are hit simultaneously
     // * Add an encoder deadband of approximately 5 deg
 
-    forceRotationMotorSpeed(0.329); // Initially go CCW until a limit switch is hit.
+    forceRotationMotorSpeed(0.29); // Initially go CCW until a limit switch is hit.
     while (isTurretBusy) {
         if (homeDeadband != null) {
           //SmartDashboard.putNumber("HomeDeadband", Units.rotationsToDegrees( Math.abs(turretRotationCANCoder.getPosition().getValueAsDouble() - homeDeadband) ));
