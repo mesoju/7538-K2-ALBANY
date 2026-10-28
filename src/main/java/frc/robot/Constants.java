@@ -34,7 +34,7 @@ public final class Constants {
 
     public static final double DEPLOY_SPEED = .22;
 
-    public static final double INDEXER_SPEED = 0.57;
+    public static final double INDEXER_SPEED = 0.75;
 
     public static final int INDEXER_DELAY = 750; // in ms btw
   }
@@ -58,7 +58,7 @@ public final class Constants {
 
     public static final double INTAKE_TOLERANCE = .01;
 
-    public static final double RETRACT_POS = -0.13;
+    public static final double RETRACT_POS = 0.33;
 
     }
 
@@ -99,9 +99,9 @@ public final class Constants {
   public final class TurretConstants {
     public static final double kG = 0.0; // Output needed to overcome gravity
     public static final double kS = 0.4; // Add 0.25 V output to overcome static friction
-    public static final double kV = 4; // A velocity target of 1 rps results in 0.12 V output
+    public static final double kV = 0.42; // A velocity target of 1 rps results in 0.12 V output
     public static final double kA = 0.2; // An acceleration of 1 rps/s require 0.01 v output
-    public static final double kP = 120.0; // An error of 1 rotation results in 2.4 V output
+    public static final double kP = 45.0; // An error of 1 rotation results in 2.4 V output
     public static final double kI = 0.0; // no output for integrated error
     public static final double kD = 1.0; // A velocity of 1 rps results in 0.1 V output
 

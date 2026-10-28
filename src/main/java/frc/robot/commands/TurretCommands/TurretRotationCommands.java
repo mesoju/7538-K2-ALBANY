@@ -20,6 +20,7 @@ public class TurretRotationCommands extends Command {
   private final TurretRotationSubsystem m_subsystem;
   private boolean intervene; 
   private pose2Dutility poseUtility;
+  private BooleanSupplier shouldTurretAimSupplier;
 
   private long lastUpdate = 0;
 
@@ -28,8 +29,9 @@ public class TurretRotationCommands extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public TurretRotationCommands(TurretRotationSubsystem subsystem, pose2Dutility poseUtility) {
+  public TurretRotationCommands(TurretRotationSubsystem subsystem, pose2Dutility poseUtility, BooleanSupplier shouldTurretAimSupplier) {
     this.poseUtility = poseUtility;
+    this.shouldTurretAimSupplier = shouldTurretAimSupplier;
 
     m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -43,7 +45,7 @@ public class TurretRotationCommands extends Command {
 
     //poseUtility.updateAlliance(DriverStation.getAlliance());
 
-    if (!intervene && System.currentTimeMillis() >= lastUpdate) {
+    if (!intervene && System.currentTimeMillis() >= lastUpdate && shouldTurretAimSupplier.getAsBoolean() == true) {
       lastUpdate = System.currentTimeMillis() + 50;
       Double angle = poseUtility.getBestFieldGoalAngle();
 

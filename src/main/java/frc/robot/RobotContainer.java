@@ -29,6 +29,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
@@ -47,8 +48,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
-
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // Subsystems
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.SpindexerSubsystem;
@@ -71,6 +75,9 @@ import frc.robot.commands.TurretCommands.TurretRotationCommands;
 import frc.robot.commands.TurretCommands.TurretShooterCommands;
 
 public class RobotContainer {
+    // SendableChooser
+    // private final SendableChooser<Boolean> shouldTurretAim = new SendableChooser<>();
+
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
@@ -92,31 +99,37 @@ public class RobotContainer {
     // Subsystems
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-    private final Intake intakeSubsystem = new Intake();
+    // private final Intake intakeSubsystem = new Intake();
 
-    private final SpindexerSubsystem spindexerSubsystem = new SpindexerSubsystem();
+    // private final SpindexerSubsystem spindexerSubsystem = new SpindexerSubsystem();
 
-    private final FeederSubsystem feederSubsystem = new FeederSubsystem();
+    // private final FeederSubsystem feederSubsystem = new FeederSubsystem();
 
-    private final TurretShooterSubsystem turretShooterSubsystem = new TurretShooterSubsystem();
-    private final TurretRotationSubsystem turretRotationSubsystem = new TurretRotationSubsystem();
+    // private final TurretShooterSubsystem turretShooterSubsystem = new TurretShooterSubsystem();
+    // private final TurretRotationSubsystem turretRotationSubsystem = new TurretRotationSubsystem();
 
     // public final Vision visionSubsystem = new Vision();
 
-    private final pose2Dutility poseUtility = new pose2Dutility(drivetrain);
-    private final Vision vision = new Vision(drivetrain, poseUtility);
+    // private final pose2Dutility poseUtility = new pose2Dutility(drivetrain);
+    // private final Vision vision = new Vision(drivetrain, poseUtility);
 
-    private double shooterRequest = 0;
-    private DoubleSupplier shooterRequestSupplier = () -> shooterRequest;
+    // private double shooterRequest = 0;
+    // private DoubleSupplier shooterRequestSupplier = () -> shooterRequest;
+    // private BooleanSupplier shouldTurretAimSupplier = () -> shouldTurretAim.getSelected();
 
     public RobotContainer() {
+
+        // shouldTurretAim.setDefaultOption("True", true);
+        // shouldTurretAim.addOption("False", false);
+
+        // SmartDashboard.putData("shouldTurretAim", shouldTurretAim);
         
         setAutonomousCommands();
 
         //CommandScheduler.getInstance().schedule(new Deploy(intakeSubsystem));
         //new Deploy(intakeSubsystem);
 
-        Commands.runOnce(() -> {new Deploy(intakeSubsystem);}, intakeSubsystem).schedule();
+        // Commands.runOnce(() -> {new Deploy(intakeSubsystem);}, intakeSubsystem).schedule();
 
         setCommandControl();
 
@@ -126,9 +139,9 @@ public class RobotContainer {
     private void setAutonomousCommands() {
         //Named Commands to use in Autonomous
 
-        NamedCommands.registerCommand("DeployIntake", new RunCommand(() -> {new Deploy(intakeSubsystem);}, intakeSubsystem));
-        NamedCommands.registerCommand("RunShooterRequest", new InstantCommand(() -> {shooterRequest = 1.0;}));
-        NamedCommands.registerCommand("StopShooterRequest", new InstantCommand(() -> {shooterRequest = 0.0;}));
+        // NamedCommands.registerCommand("DeployIntake", new RunCommand(() -> {new Deploy(intakeSubsystem);}, intakeSubsystem));
+        // NamedCommands.registerCommand("RunShooterRequest", new InstantCommand(() -> {shooterRequest = 1.0;}));
+        // NamedCommands.registerCommand("StopShooterRequest", new InstantCommand(() -> {shooterRequest = 0.0;}));
     }
 
     private void setCommandControl() {
@@ -150,39 +163,42 @@ public class RobotContainer {
         //     driverController::getRightTriggerAxis
         // ));
 
-        turretShooterSubsystem.setDefaultCommand(new TurretShooterCommands(turretShooterSubsystem,
-            feederSubsystem,
-            spindexerSubsystem,
-            poseUtility,
-            shooterRequestSupplier
-        ));
+        // turretShooterSubsystem.setDefaultCommand(new TurretShooterCommands(turretShooterSubsystem,
+        //     feederSubsystem,
+        //     spindexerSubsystem,
+        //     poseUtility,
+        //     shooterRequestSupplier
+        // ));
 
-        turretRotationSubsystem.setDefaultCommand(new TurretRotationCommands(
-            turretRotationSubsystem, 
-            poseUtility
-        ));
+        // turretRotationSubsystem.setDefaultCommand(new TurretRotationCommands(
+        //     turretRotationSubsystem, 
+        //     poseUtility,
+        //     shouldTurretAimSupplier
+        // ));
     }
 
     public void teleopInit() {
-        shooterRequest = 0;
+        // shooterRequest = 0;
+
+        int inversionMultipler = DriverStation.getAlliance().orElse(Alliance.Blue) == (Alliance.Red) ? -1 : 1;
 
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-Math.copySign((Math.pow(Math.abs(DriverController.getLeftY()), OperatorConstants.Sonic_Hedgehog_Protein)), DriverController.getLeftY()) * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-Math.copySign((Math.pow(Math.abs(DriverController.getLeftX()), OperatorConstants.Sonic_Hedgehog_Protein)), DriverController.getLeftX()) * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(DriverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-Math.copySign((Math.pow(Math.abs(DriverController.getLeftY()), OperatorConstants.Sonic_Hedgehog_Protein)), DriverController.getLeftY()) * MaxSpeed * inversionMultipler) // Drive forward with negative Y (forward)
+                    .withVelocityY(-Math.copySign((Math.pow(Math.abs(DriverController.getLeftX()), OperatorConstants.Sonic_Hedgehog_Protein)), DriverController.getLeftX()) * MaxSpeed * inversionMultipler) // Drive left with negative X (left)
+                    .withRotationalRate(-DriverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
 
         DriverController.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        DriverController.b().whileTrue(drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-DriverController.getLeftY(), -DriverController.getLeftX()))
-        ));
+        // DriverController.b().whileTrue(drivetrain.applyRequest(() ->
+        //     point.withModuleDirection(new Rotation2d(-DriverController.getLeftY(), -DriverController.getLeftX()))
+        // ));
     }
 
     public void teleopPeriodic() {
-        shooterRequest = driverController.getRightTriggerAxis() - driverController.getLeftTriggerAxis();
+        // shooterRequest = driverController.getRightTriggerAxis() - driverController.getLeftTriggerAxis();
     }
 
     public void autoPeriodic() {
@@ -207,21 +223,21 @@ public class RobotContainer {
         DriverController.start().and(DriverController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         DriverController.start().and(DriverController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-        DriverController.y().onTrue(new Deploy(intakeSubsystem));
-        DriverController.b().onTrue(new Retract(intakeSubsystem));
+        // DriverController.y().onTrue(new Deploy(intakeSubsystem));
+        // DriverController.b().onTrue(new Retract(intakeSubsystem));
 
-        DriverController.leftBumper().onTrue(Commands.runOnce(() -> {
-            intakeSubsystem.setIndexer(-MotorConstants.INDEXER_SPEED);
-        }));
-        DriverController.rightBumper().onTrue(Commands.runOnce(() -> {
-            intakeSubsystem.setIndexer(MotorConstants.INDEXER_SPEED);
-        }));
-        DriverController.leftBumper().onFalse(Commands.runOnce(() -> {
-            intakeSubsystem.setIndexer(0);
-        }));
-        DriverController.rightBumper().onFalse(Commands.runOnce(() -> {
-            intakeSubsystem.setIndexer(0);
-        }));
+        // DriverController.leftBumper().onTrue(Commands.runOnce(() -> {
+        //     intakeSubsystem.setIndexer(-MotorConstants.INDEXER_SPEED);
+        // }));
+        // DriverController.rightBumper().onTrue(Commands.runOnce(() -> {
+        //     intakeSubsystem.setIndexer(MotorConstants.INDEXER_SPEED);
+        // }));
+        // DriverController.leftBumper().onFalse(Commands.runOnce(() -> {
+        //     intakeSubsystem.setIndexer(0);
+        // }));
+        // DriverController.rightBumper().onFalse(Commands.runOnce(() -> {
+        //     intakeSubsystem.setIndexer(0);
+        // }));
 
         DriverController.x().onTrue(
             drivetrain.runOnce(drivetrain::seedFieldCentric)
@@ -241,6 +257,7 @@ public class RobotContainer {
         // Simple drive forward auton
         final var idle = new SwerveRequest.Idle();
         //shooterRequest = 1.0;
+        
         return Commands.sequence(
             // Reset our field centric heading to match the robot
             // facing away from our alliance station wall (0 deg).
@@ -253,7 +270,7 @@ public class RobotContainer {
                     .withRotationalRate(0)
             )
             .withTimeout(0.5),
-            new InstantCommand(() -> {shooterRequest = 1.0;}),
+            //new InstantCommand(() -> {shooterRequest = 1.0;}),
             // Finally idle for the rest of auton
             drivetrain.applyRequest(() -> idle)
         );
